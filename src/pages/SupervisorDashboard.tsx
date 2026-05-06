@@ -1,93 +1,163 @@
 import React from 'react';
-import { Users, FileText, MessageSquare } from 'lucide-react';
+import { Users, FileText, MessageSquare, Filter, User, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const SupervisorDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1>Supervisor Overview</h1>
-        <p style={{ color: '#666', marginTop: '8px' }}>Manage your assigned students and review reports.</p>
-      </div>
+    <div className="dashboard-canvas">
+      {/* Summary Grid */}
+      <section className="summary-grid">
+        <div className="summary-card hover-shadow">
+          <div className="card-header">
+            <span className="material-icon text-secondary"><Users size={32} /></span>
+          </div>
+          <div className="card-body">
+            <h4 className="card-label">Total Students Assigned</h4>
+            <span className="card-value text-primary">12</span>
+          </div>
+        </div>
+        
+        <div className="summary-card hover-shadow">
+          <div className="card-header">
+            <span className="material-icon text-error"><FileText size={32} /></span>
+            <span className="urgent-badge">URGENT</span>
+          </div>
+          <div className="card-body">
+            <h4 className="card-label">Reports Pending Review</h4>
+            <span className="card-value text-primary">5</span>
+          </div>
+        </div>
 
-      <div className="grid-3">
-        <div className="card stat-card">
-          <div className="stat-icon">
-            <Users size={24} />
+        <div className="summary-card hover-shadow">
+          <div className="card-header">
+            <span className="material-icon text-secondary"><MessageSquare size={32} /></span>
           </div>
-          <div className="stat-info">
-            <h3>12</h3>
-            <p>Assigned Students</p>
-          </div>
-        </div>
-        <div className="card stat-card">
-          <div className="stat-icon" style={{ backgroundColor: 'rgba(241, 196, 15, 0.1)', color: '#f39c12' }}>
-            <FileText size={24} />
-          </div>
-          <div className="stat-info">
-            <h3>8</h3>
-            <p>Pending Reports</p>
+          <div className="card-body">
+            <h4 className="card-label">Unread Messages</h4>
+            <span className="card-value text-primary">3</span>
           </div>
         </div>
-        <div className="card stat-card">
-          <div className="stat-icon" style={{ backgroundColor: 'rgba(52, 152, 219, 0.1)', color: '#2980b9' }}>
-            <MessageSquare size={24} />
-          </div>
-          <div className="stat-info">
-            <h3>3</h3>
-            <p>Unread Messages</p>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <div className="card" style={{ marginTop: '32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '20px' }}>My Students</h2>
-          <button className="btn btn-outline" style={{ padding: '6px 12px' }}>View All</button>
+      {/* Assigned Students Section */}
+      <section className="students-section">
+        <div className="section-header">
+          <h2 className="section-title">Assigned Students</h2>
+          <button className="btn-filter">
+            <Filter size={18} /> Filter
+          </button>
         </div>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Student Name</th>
-              <th>ID Number</th>
-              <th>Company / Location</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ahmed Ali</td>
-              <td>201900123</td>
-              <td>Tech Solutions Inc.</td>
-              <td><span className="badge badge-success">Active</span></td>
-              <td>
-                <button className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>View Profile</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Sara Khalid</td>
-              <td>201900456</td>
-              <td>Innovate Labs</td>
-              <td><span className="badge badge-warning">Report Pending</span></td>
-              <td>
-                <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '12px' }}>Review Report</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Omar Hassan</td>
-              <td>201900789</td>
-              <td>Global Systems</td>
-              <td><span className="badge badge-success">Active</span></td>
-              <td>
-                <button className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>View Profile</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+        <div className="students-list">
+          {/* Jordan Smith */}
+          <div className="student-card hover-shadow">
+            <div className="student-avatar">
+              <User size={32} className="text-primary" />
+            </div>
+            <div className="student-info-grid">
+              <div>
+                <h3 className="student-name">Jordan Smith</h3>
+                <p className="student-phase">Phase 1 - Clinical</p>
+              </div>
+              <div className="student-progress">
+                <div className="progress-header">
+                  <span>Progress</span>
+                  <span className="progress-percent">65%</span>
+                </div>
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: '65%' }}></div>
+                </div>
+              </div>
+              <div className="student-status">
+                <span className="status-badge ready">Report Ready</span>
+              </div>
+              <div className="student-action">
+                <button className="btn-action primary">Review Report</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Elena Rodriguez */}
+          <div className="student-card hover-shadow">
+            <div className="student-avatar">
+              <UserCheck size={32} className="text-primary" />
+            </div>
+            <div className="student-info-grid">
+              <div>
+                <h3 className="student-name">Elena Rodriguez</h3>
+                <p className="student-phase">Phase 2 - Advanced</p>
+              </div>
+              <div className="student-progress">
+                <div className="progress-header">
+                  <span>Progress</span>
+                  <span className="progress-percent">82%</span>
+                </div>
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: '82%' }}></div>
+                </div>
+              </div>
+              <div className="student-status">
+                <span className="status-badge active">Active</span>
+              </div>
+              <div className="student-action">
+                <button className="btn-action outline">View Profile</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Marcus Chen */}
+          <div className="student-card hover-shadow">
+            <div className="student-avatar">
+              <User size={32} className="text-primary" />
+            </div>
+            <div className="student-info-grid">
+              <div>
+                <h3 className="student-name">Marcus Chen</h3>
+                <p className="student-phase">Phase 1 - Clinical</p>
+              </div>
+              <div className="student-progress">
+                <div className="progress-header">
+                  <span>Progress</span>
+                  <span className="progress-percent">30%</span>
+                </div>
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: '30%' }}></div>
+                </div>
+              </div>
+              <div className="student-status">
+                <span className="status-badge active">Active</span>
+              </div>
+              <div className="student-action">
+                <button className="btn-action outline">View Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Decorative Academic Element: Professional Timeline Preview */}
+      <section className="milestones-section">
+        <div className="milestones-container">
+          <div className="milestones-bg-image"></div>
+          <div className="milestones-content">
+            <h2 className="milestones-title">Upcoming Field Milestones</h2>
+            <div className="timeline">
+              <div className="timeline-item">
+                <div className="timeline-dot primary"></div>
+                <h4 className="timeline-item-title">Clinical Proficiency Assessment</h4>
+                <p className="timeline-item-desc">Scheduled for next Friday. 8 students eligible for evaluation.</p>
+              </div>
+              <div className="timeline-item">
+                <div className="timeline-dot secondary"></div>
+                <h4 className="timeline-item-title dim">Final Thesis Submission</h4>
+                <p className="timeline-item-desc dim">Phase 2 students reaching completion status in 14 days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
