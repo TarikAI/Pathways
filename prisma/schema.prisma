@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum Role {
+  STUDENT
+  ACADEMIC_SUPERVISOR
+  FIELD_SUPERVISOR
+  ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum InternshipStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  MESSAGE
+  REPORT_SUBMITTED
+  REPORT_REVIEWED
+  EVALUATION_POSTED
+  APPLICATION_DECISION
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  fullName        String
+  role            Role
+  phone           String?
+  avatarUrl       String?
+  emailVerified   DateTime?
+  notifyByEmail   Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  studentInternships  Internship[]          @relation("StudentInternship")
+  academicInternships Internship[]          @relation("AcademicSupInternship")
+  fieldInternships    Internship[]          @relation("FieldSupInternship")
+  applications        TrainingApplication[]
+  notifications       Notification[]
+  authoredReviews     ReportReview[]
+  authoredMessages    Message[]
+  conversationParts   ConversationParticipant[]
+  authoredEvaluations Evaluation[]          @relation("EvaluatorEvaluations")
+  cosignedEvaluations Evaluation[]          @relation("CosignerEvaluations")
+  passwordResetTokens PasswordResetToken[]
+  auditLogs           AuditLog[]
+}
+
+model PasswordResetToken {
+  token     String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model TrainingProgram {
+  id           String   @id @default(cuid())
+  title        String
+  description  String   @db.Text
+  organization String
+  durationWeeks Int
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  applications TrainingApplication[]
+  internships  Internship[]
+}
+
+model TrainingApplication {
+  id          String            @id @default(cuid())
+  studentId   String
+  programId   String
+  status      ApplicationStatus @default(PENDING)
+  message     String?           @db.Text
+  decidedById String?
+  decidedAt   DateTime?
+  createdAt   DateTime          @default(now())
+  student     User              @relation(fields: [studentId], references: [id])
+  program     TrainingProgram   @relation(fields: [programId], references: [id])
+
+  @@index([studentId])
+  @@index([programId])
+  @@index([status])
+}
+
+model Internship {
+  id                   String           @id @default(cuid())
+  studentId            String
+  academicSupervisorId String
+  fieldSupervisorId    String
+  programId            String
+  startDate            DateTime
+  endDate              DateTime
+  status               InternshipStatus @default(ACTIVE)
+  weekNumber           Int              @default(0)
+  progressPercent      Int              @default(0)
+  createdAt            DateTime         @default(now())
+
+  student            User            @relation("StudentInternship", fields: [studentId], references: [id])
+  academicSupervisor User            @relation("AcademicSupInternship", fields: [academicSupervisorId], references: [id])
+  fieldSupervisor    User            @relation("FieldSupInternship", fields: [fieldSupervisorId], references: [id])
+  program            TrainingProgram @relation(fields: [programId], references: [id])
+  reports            Report[]
+  evaluations        Evaluation[]
+
+  @@index([studentId])
+  @@index([academicSupervisorId])
+  @@index([fieldSupervisorId])
+}
+
+model Report {
+  id           String             @id @default(cuid())
+  internshipId String
+  weekNumber   Int
+  title        String
+  body         String             @db.LongText
+  status       ReportStatus       @default(SUBMITTED)
+  submittedAt  DateTime           @default(now())
+  internship   Internship         @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  attachments  ReportAttachment[]
+  reviews      ReportReview[]
+
+  @@index([internshipId])
+  @@index([status])
+}
+
+model ReportAttachment {
+  id        String @id @default(cuid())
+  reportId  String
+  url       String
+  filename  String
+  mimeType  String
+  sizeBytes Int
+  report    Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model ReportReview {
+  id         String       @id @default(cuid())
+  reportId   String
+  reviewerId String
+  decision   ReportStatus
+  comment    String       @db.Text
+  createdAt  DateTime     @default(now())
+  report     Report       @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reviewer   User         @relation(fields: [reviewerId], references: [id])
+
+  @@index([reportId])
+  @@index([reviewerId])
+}
+
+model Conversation {
+  id            String                    @id @default(cuid())
+  createdAt     DateTime                  @default(now())
+  lastMessageAt DateTime                  @default(now())
+  participants  ConversationParticipant[]
+  messages      Message[]
+}
+
+model ConversationParticipant {
+  conversationId String
+  userId         String
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String              @id @default(cuid())
+  conversationId String
+  senderId       String
+  body           String              @db.Text
+  createdAt      DateTime            @default(now())
+  conversation   Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User                @relation(fields: [senderId], references: [id])
+  attachments    MessageAttachment[]
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+model MessageAttachment {
+  id        String  @id @default(cuid())
+  messageId String
+  url       String
+  filename  String
+  mimeType  String
+  sizeBytes Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+model Evaluation {
+  id             String                @id @default(cuid())
+  internshipId   String
+  evaluatorId    String
+  cosignedById   String?
+  cosignedAt     DateTime?
+  period         String
+  overallComment String                @db.Text
+  totalScore     Int
+  createdAt      DateTime              @default(now())
+  internship     Internship            @relation(fields: [internshipId], references: [id])
+  evaluator      User                  @relation("EvaluatorEvaluations", fields: [evaluatorId], references: [id])
+  cosigner       User?                 @relation("CosignerEvaluations", fields: [cosignedById], references: [id])
+  criteria       EvaluationCriterion[]
+
+  @@index([internshipId])
+  @@index([evaluatorId])
+}
+
+model EvaluationCriterion {
+  id           String     @id @default(cuid())
+  evaluationId String
+  label        String
+  score        Int
+  comment      String?    @db.Text
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  @@index([evaluationId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String           @db.Text
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
