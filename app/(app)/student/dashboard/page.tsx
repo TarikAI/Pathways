@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import Link from "next/link";
 
 export default async function StudentDashboard() {
   const session = await requireRole(["STUDENT"]);
@@ -34,8 +35,8 @@ export default async function StudentDashboard() {
         <div className="card">
           <h2 className="text-xl font-semibold mb-2">Quick Actions</h2>
           <div className="flex flex-col gap-3">
-            <a href="/student/reports/new" className="btn btn-primary text-center">Submit Report</a>
-            <a href="/messages" className="btn btn-outline text-center">Messages</a>
+            <Link href="/student/reports/new" className="btn btn-primary text-center">Submit Report</Link>
+            <Link href="/messages" className="btn btn-outline text-center">Messages</Link>
           </div>
         </div>
       </div>

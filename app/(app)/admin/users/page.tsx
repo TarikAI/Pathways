@@ -1,9 +1,10 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import type { User } from "@prisma/client";
 
 export default async function AdminUsersPage() {
   const session = await requireRole(["ADMIN"]);
-  
+
   const users = await db.user.findMany({
     orderBy: { createdAt: 'desc' }
   });
@@ -26,7 +27,7 @@ export default async function AdminUsersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {users.map(u => (
+            {users.map((u: User) => (
               <tr key={u.id} className="hover:bg-gray-50">
                 <td className="p-4 font-medium">{u.fullName}</td>
                 <td className="p-4 text-gray-600">{u.email}</td>
