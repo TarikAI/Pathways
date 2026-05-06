@@ -8,7 +8,7 @@ export default function LandingPage() {
         <div className="text-2xl font-bold tracking-widest text-brand-sky">PATHWAYS</div>
         <nav className="flex gap-6 items-center">
           <Link href="/login" className="hover:text-brand-sky transition-colors">Sign In</Link>
-          <Link href="/login" className="btn bg-brand-teal text-white hover:opacity-90">
+          <Link href="/register" className="btn bg-brand-teal text-white hover:opacity-90">
             Get Started
           </Link>
         </nav>

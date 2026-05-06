@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { LogIn } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { LogIn, UserCircle } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -17,6 +17,8 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const registered = searchParams.get("registered");
   const [error, setError] = useState("");
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -39,35 +41,100 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="card w-full">
-      <h2 className="text-2xl font-bold mb-6 text-brand-navy">Sign In</h2>
-      {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            className="form-control"
-            {...register("email")}
-          />
-          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+    <div className="min-h-screen flex bg-brand-beige">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-navy to-brand-teal relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
+          <div className="mb-8">
+            <h1 className="text-6xl font-bold text-brand-sky tracking-widest mb-4">PATHWAYS</h1>
+            <p className="text-white/80 text-xl">Cooperative Training Platform</p>
+          </div>
+          <div className="max-w-md">
+            <img
+              src="/vector_illustration.png"
+              alt="Students and supervisors working together"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+          <p className="mt-8 text-white/70 text-lg max-w-md">
+            Connecting students, academic advisors, and field supervisors for successful internship experiences
+          </p>
         </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            className="form-control"
-            {...register("password")}
-          />
-          {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-brand-navy/50 to-transparent" />
+      </div>
+
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="lg:hidden text-center mb-8">
+            <h1 className="text-4xl font-bold text-brand-navy tracking-widest mb-2">PATHWAYS</h1>
+            <p className="text-brand-teal">Welcome back</p>
+          </div>
+
+          <div className="card">
+            <div className="text-center mb-8">
+              <UserCircle className="w-12 h-12 text-brand-teal mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-brand-navy">Welcome Back</h2>
+              <p className="text-gray-500 mt-2">Sign in to your account</p>
+            </div>
+
+            {registered && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-600 text-sm">Account created successfully! Please sign in.</p>
+              </div>
+            )}
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div>
+                <label className="form-label" htmlFor="email">Email Address</label>
+                <input
+                  id="email"
+                  type="email"
+                  className="form-control"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+              </div>
+
+              <div>
+                <label className="form-label" htmlFor="password">Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  className="form-control"
+                  placeholder="Enter your password"
+                  {...register("password")}
+                />
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <a href="/forgot-password" className="text-sm text-brand-teal hover:underline">
+                  Forgot password?
+                </a>
+              </div>
+
+              <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full">
+                <LogIn size={18} />
+                {isSubmitting ? "Signing in..." : "Sign In"}
+              </button>
+            </form>
+
+            <p className="text-center mt-6 text-sm text-gray-600">
+              Don&apos;t have an account?{" "}
+              <a href="/register" className="text-brand-teal font-semibold hover:underline">
+                Sign up
+              </a>
+            </p>
+          </div>
         </div>
-        <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full mt-4">
-          <LogIn size={18} />
-          {isSubmitting ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
