@@ -4,7 +4,7 @@
 ### Phase 1: Planning and UI Design (Google Stitch)
 1.  **Project Initialization**: Create a new project in Google Stitch named "Pathways".
 2.  **Design System Setup**: 
-    *   Create a design system utilizing the provided color palette:
+    *   Create a design system utilizing the prov             ided color palette:
         *   Navy: `#2F4156` (Primary)
         *   Teal: `#567C8D` (Secondary)
         *   Sky Blue: `#C8D9E6` (Accent/Background)

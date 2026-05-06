@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Pathways
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Pathways is a graduation-project web platform for managing cooperative and field training. It streamlines communication and workflow between students, academic supervisors, and field supervisors by providing role-based dashboards, training applications, report submission workflows, and evaluations.
 
-Currently, two official plugins are available:
+## Screenshots
+*(Add screenshots here)*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+| Component | Technology |
+|---|---|
+| Framework | Next.js 15.x (App Router, RSC, Server Actions) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Database | MySQL (TiDB Cloud Serverless) |
+| ORM | Prisma 6 |
+| Authentication | Auth.js v5 |
+| File Storage | Vercel Blob |
+| Email | Resend |
 
-## React Compiler
+## Environment Variables
+See `.env.example` for the required structure:
+- `DATABASE_URL`
+- `AUTH_SECRET`
+- `AUTH_URL`
+- `BLOB_READ_WRITE_TOKEN`
+- `RESEND_API_KEY`
+- `EMAIL_FROM`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local Setup
+1. Clone the repository.
+2. Run `pnpm install`
+3. Copy `.env.example` to `.env` and fill in values.
+4. Run `pnpm prisma migrate dev`
+5. Run `pnpm db:seed`
+6. Run `pnpm dev` to start the local server on `http://localhost:3000`.
 
-## Expanding the ESLint configuration
+## Scripts
+- `pnpm dev`: Start the development server
+- `pnpm build`: Build for production
+- `pnpm start`: Start the production server
+- `pnpm lint`: Run ESLint
+- `pnpm typecheck`: Run tsc without emitting files
+- `pnpm format:check`: Run Prettier check
+- `pnpm db:seed`: Seed the database with sample data
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Architecture
+```mermaid
+graph TD
+    Client[Web Client] --> AppRouter[Next.js App Router]
+    AppRouter --> ServerActions[Server Actions]
+    ServerActions --> Prisma[Prisma ORM]
+    Prisma --> MySQL[(TiDB MySQL)]
+    ServerActions --> Auth[Auth.js]
+    ServerActions --> Blob[Vercel Blob]
+    ServerActions --> Email[Resend]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Deployment Notes
+Designed to be deployed on Vercel. Connect the GitHub repository to a Vercel project, add the required environment variables, and deploy. Make sure to run `prisma migrate deploy` against the production database during or after deployment.
