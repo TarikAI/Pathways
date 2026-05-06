@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
+  "/(marketing)/page": "/",
+  "/(app)/admin/users/page": "/admin/users",
+  "/(app)/student/reports/page": "/student/reports",
+  "/(app)/messages/page": "/messages",
+  "/(app)/settings/page": "/settings",
+  "/(app)/student/reports/new/page": "/student/reports/new",
+  "/(app)/student/dashboard/page": "/student/dashboard",
+  "/(app)/supervisor/dashboard/page": "/supervisor/dashboard",
+  "/(auth)/login/page": "/login"
+}

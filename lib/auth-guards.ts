@@ -1,17 +1,29 @@
 import "server-only";
 import { auth } from "./auth";
 
-export async function requireSession() {
+import { Session } from "next-auth";
+
+type AppSession = Session & {
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    fullName: string;
+    avatarUrl?: string | null;
+  }
+};
+
+export async function requireSession(): Promise<AppSession> {
   const session = await auth();
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
-  return session;
+  return session as unknown as AppSession;
 }
 
-export async function requireRole(roles: string[]) {
+export async function requireRole(roles: string[]): Promise<AppSession> {
   const session = await requireSession();
-  const role = (session.user as any).role;
+  const role = session.user.role;
   if (!roles.includes(role)) {
     throw new Error("Forbidden");
   }
