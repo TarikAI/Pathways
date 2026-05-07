@@ -88,6 +88,7 @@ export default function MessagesPage() {
           ) : (
             conversations.map((conv) => {
               const other = conv.participants[0];
+              if (!other) return null;
               return (
                 <Link
                   key={conv.id}
