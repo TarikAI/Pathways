@@ -77,7 +77,7 @@ export default function EvaluationsPage() {
 
   const updateCriterion = (index: number, field: keyof Criterion, value: string | number) => {
     const updated = [...criteria];
-    updated[index] = { ...updated[index], [field]: value };
+    updated[index] = { ...updated[index], [field]: value } as Criterion;
     setCriteria(updated);
   };
 
