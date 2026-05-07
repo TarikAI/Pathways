@@ -31,12 +31,19 @@ export async function POST(req: Request) {
     const body = await req.json();
     const data = createProgramSchema.parse(body);
 
+    // Handle empty string or undefined for optional date field
+    const deadline = data.applicationDeadline && data.applicationDeadline !== ""
+      ? new Date(data.applicationDeadline)
+      : null;
+
     const program = await db.trainingProgram.create({
       data: {
-        ...data,
-        applicationDeadline: data.applicationDeadline
-          ? new Date(data.applicationDeadline)
-          : null,
+        title: data.title,
+        description: data.description,
+        organization: data.organization,
+        durationWeeks: data.durationWeeks,
+        seats: data.seats,
+        applicationDeadline: deadline,
         createdById: session.user.id,
       },
       include: {
