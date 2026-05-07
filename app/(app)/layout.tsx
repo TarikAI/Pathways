@@ -9,7 +9,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="flex min-h-screen bg-brand-beige">
       <Sidebar role={session.user.role} />
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <Topbar user={session.user} />
+        <Topbar />
         <main className="flex-1 overflow-y-auto p-8">
           {children}
         </main>
