@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Lock, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -138,9 +139,9 @@ function ResetPasswordForm() {
       </form>
 
       <div className="mt-6 text-center text-sm text-gray-500">
-        <a href="/forgot-password" className="text-brand-teal hover:underline">
+        <Link href="/forgot-password" className="text-brand-teal hover:underline">
           Request a new reset link
-        </a>
+        </Link>
       </div>
     </div>
   );

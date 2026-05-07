@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -38,20 +39,18 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     });
 
     const previousStatus = report.status;
-    const updatedReport = await db.report.update({
+    await db.report.update({
       where: { id },
       data: { status: data.decision as "APPROVED" | "REJECTED" | "UNDER_REVIEW" }
     });
 
     if (previousStatus !== data.decision) {
-      await db.notification.create({
-        data: {
-          userId: report.internship.studentId,
-          type: "REPORT_REVIEWED",
-          title: `Report ${data.decision.toLowerCase()}`,
-          body: `Your week ${report.weekNumber} report has been ${data.decision.toLowerCase()}. ${data.comment ? "See feedback for details." : ""}`,
-          link: `/student/reports/${id}`,
-        },
+      await createNotification({
+        userId: report.internship.studentId,
+        type: "REPORT_REVIEWED",
+        title: `Report ${data.decision.toLowerCase()}`,
+        body: `Your week ${report.weekNumber} report has been ${data.decision.toLowerCase()}. ${data.comment ? "See feedback for details." : ""}`,
+        link: `/student/reports/${id}`,
       });
 
       await db.auditLog.create({

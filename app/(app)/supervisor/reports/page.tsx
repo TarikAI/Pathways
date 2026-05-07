@@ -1,7 +1,7 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { internshipStatusClass, formatDate } from "@/lib/utils";
+import { internshipStatusClass } from "@/lib/utils";
 
 export default async function SupervisorReportsPage() {
   const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR"]);

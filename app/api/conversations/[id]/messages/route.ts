@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -121,14 +122,12 @@ export async function POST(
 
     await Promise.all(
       otherParticipants.map((p) =>
-        db.notification.create({
-          data: {
-            userId: p.userId,
-            type: "MESSAGE",
-            title: `New message from ${session.user.fullName}`,
-            body: data.body.slice(0, 100) + (data.body.length > 100 ? "..." : ""),
-            link: `/messages/${id}`,
-          },
+        createNotification({
+          userId: p.userId,
+          type: "MESSAGE",
+          title: `New message from ${session.user.fullName}`,
+          body: data.body.slice(0, 100) + (data.body.length > 100 ? "..." : ""),
+          link: `/messages/${id}`,
         })
       )
     );

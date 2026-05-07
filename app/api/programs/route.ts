@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createProgramSchema } from "@/lib/validators/program";
 
 export async function GET() {
@@ -31,7 +32,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const data = createProgramSchema.parse(body);
 
-    // Handle empty string or undefined for optional date field
     const deadline = data.applicationDeadline && data.applicationDeadline !== ""
       ? new Date(data.applicationDeadline)
       : null;
@@ -65,9 +65,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json(program, { status: 201 });
   } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
+    if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: (err as any).errors },
+        { error: "Validation error", details: err.flatten() },
         { status: 400 }
       );
     }

@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -7,7 +8,7 @@ const createConversationSchema = z.object({
   participantIds: z.array(z.string()).min(1),
 });
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   try {
     const session = await requireRole(["STUDENT", "ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
 
@@ -110,15 +111,17 @@ export async function POST(req: Request) {
       },
     });
 
-    await db.notification.create({
-      data: {
-        userId: data.participantIds[0],
-        type: "MESSAGE",
-        title: "New Conversation",
-        body: `${session.user.fullName} started a conversation with you.`,
-        link: `/messages/${conversation.id}`,
-      },
-    });
+    await Promise.all(
+      data.participantIds.map((participantId) =>
+        createNotification({
+          userId: participantId,
+          type: "MESSAGE",
+          title: "New Conversation",
+          body: `${session.user.fullName} started a conversation with you.`,
+          link: `/messages/${conversation.id}`,
+        })
+      )
+    );
 
     await db.auditLog.create({
       data: {

@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { updateProgramSchema } from "@/lib/validators/program";
 
 export async function GET(
@@ -54,7 +55,6 @@ export async function PATCH(
     const body = await req.json();
     const data = updateProgramSchema.parse(body);
 
-    // Check if user owns the program or is admin
     const existing = await db.trainingProgram.findUnique({
       where: { id },
       select: { createdById: true },
@@ -68,7 +68,6 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Handle empty string or undefined for optional date field
     const deadline = data.applicationDeadline && data.applicationDeadline !== ""
       ? new Date(data.applicationDeadline)
       : null;
@@ -92,9 +91,9 @@ export async function PATCH(
 
     return NextResponse.json(program);
   } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
+    if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: (err as any).errors },
+        { error: "Validation error", details: err.flatten() },
         { status: 400 }
       );
     }
@@ -111,7 +110,6 @@ export async function DELETE(
     const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
     const { id } = await params;
 
-    // Check if program exists and user owns it or is admin
     const existing = await db.trainingProgram.findUnique({
       where: { id },
       include: {

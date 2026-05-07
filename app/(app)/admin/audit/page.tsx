@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
-import { FileText, Search, Filter, User as UserIcon, ChevronRight } from "lucide-react";
+import { FileText, Search, Filter, User as UserIcon } from "lucide-react";
 
 interface AuditLog {
   id: string;

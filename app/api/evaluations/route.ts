@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -123,14 +124,12 @@ export async function POST(req: Request) {
       },
     });
 
-    await db.notification.create({
-      data: {
-        userId: internship.academicSupervisorId,
-        type: "EVALUATION_POSTED",
-        title: "New Evaluation Pending Cosign",
-        body: `An evaluation for ${internship.student.fullName} (period: ${data.period}) is ready for your review.`,
-        link: `/supervisor/students/${internship.studentId}`,
-      },
+    await createNotification({
+      userId: internship.academicSupervisorId,
+      type: "EVALUATION_POSTED",
+      title: "New Evaluation Pending Cosign",
+      body: `An evaluation for ${internship.student.fullName} (period: ${data.period}) is ready for your review.`,
+      link: `/supervisor/students/${internship.studentId}`,
     });
 
     await db.auditLog.create({

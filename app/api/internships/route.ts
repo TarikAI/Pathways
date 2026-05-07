@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -12,17 +13,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
 
-  const where: any = {};
+  const where: Prisma.InternshipWhereInput = {};
   if (status) {
-    where.status = status;
+    where.status = status as Prisma.EnumInternshipStatusFilter["equals"];
   }
 
-  // Field supervisors only see internships they supervise
   if (session.user.role === "FIELD_SUPERVISOR") {
     where.fieldSupervisorId = session.user.id;
-  }
-  // Academic supervisors only see internships they supervise
-  else if (session.user.role === "ACADEMIC_SUPERVISOR") {
+  } else if (session.user.role === "ACADEMIC_SUPERVISOR") {
     where.academicSupervisorId = session.user.id;
   }
 

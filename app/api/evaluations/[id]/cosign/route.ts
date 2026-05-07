@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -13,6 +14,7 @@ export async function POST(
     const evaluation = await db.evaluation.findUnique({
       where: { id },
       include: {
+        criteria: true,
         internship: {
           include: { student: true, academicSupervisor: true },
         },
@@ -39,16 +41,14 @@ export async function POST(
       },
     });
 
-    await db.notification.create({
-      data: {
-        userId: evaluation.internship.studentId,
-        type: "EVALUATION_POSTED",
-        title: "New Evaluation Posted",
-        body: `Your evaluation for period ${evaluation.period} has been posted (${evaluation.totalScore}/${
-          evaluation.criteria.length * 10
-        }).`,
-        link: `/student/internship`,
-      },
+    await createNotification({
+      userId: evaluation.internship.studentId,
+      type: "EVALUATION_POSTED",
+      title: "New Evaluation Posted",
+      body: `Your evaluation for period ${evaluation.period} has been posted (${evaluation.totalScore}/${
+        evaluation.criteria.length * 10
+      }).`,
+      link: `/student/internship`,
     });
 
     await db.auditLog.create({

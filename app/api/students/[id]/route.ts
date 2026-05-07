@@ -35,7 +35,7 @@ export async function GET(
             weekNumber: true,
             status: true,
             body: true,
-            createdAt: true,
+            submittedAt: true,
           },
         },
         evaluations: {

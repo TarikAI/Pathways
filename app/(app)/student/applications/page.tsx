@@ -1,7 +1,7 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { FileText, Briefcase, ArrowRight } from "lucide-react";
+import { FileText, Briefcase } from "lucide-react";
 import { formatDate, applicationStatusClass } from "@/lib/utils";
 
 export default async function StudentApplicationsPage() {

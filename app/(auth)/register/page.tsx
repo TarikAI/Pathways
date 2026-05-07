@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserPlus, GraduationCap, Briefcase, Building2 } from "lucide-react";
+import { UserPlus } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -21,9 +23,9 @@ const registerSchema = z.object({
 type RegisterForm = z.infer<typeof registerSchema>;
 
 const roles = [
-  { value: "STUDENT", label: "Student", icon: GraduationCap },
-  { value: "ACADEMIC_SUPERVISOR", label: "Academic Supervisor", icon: Building2 },
-  { value: "FIELD_SUPERVISOR", label: "Field Supervisor", icon: Briefcase },
+  { value: "STUDENT", label: "Student" },
+  { value: "ACADEMIC_SUPERVISOR", label: "Academic Supervisor" },
+  { value: "FIELD_SUPERVISOR", label: "Field Supervisor" },
 ];
 
 export default function RegisterPage() {
@@ -76,13 +78,15 @@ export default function RegisterPage() {
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
           <div className="mb-8">
-            <img src="/logo-bg.jpg" alt="Pathways" className="w-[200px] h-auto mx-auto mb-4" />
+            <Image src="/logo-bg.jpg" alt="Pathways" width={200} height={80} className="mx-auto mb-4" priority />
             <p className="text-white/80 text-xl">Cooperative Training Platform</p>
           </div>
           <div className="max-w-md">
-            <img
+            <Image
               src="/vector_illustration.png"
               alt="Students and supervisors working together"
+              width={400}
+              height={300}
               className="w-full h-auto object-contain"
             />
           </div>
@@ -186,9 +190,9 @@ export default function RegisterPage() {
 
             <p className="text-center mt-6 text-sm text-gray-600">
               Already have an account?{" "}
-              <a href="/login" className="text-brand-teal font-semibold hover:underline">
+              <Link href="/login" className="text-brand-teal font-semibold hover:underline">
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </div>

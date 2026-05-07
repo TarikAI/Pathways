@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Bell, CheckCircle2 } from "lucide-react";
+import { User, Lock, Bell, CheckCircle2 } from "lucide-react";
 
 export default function SettingsPage() {
-  const router = useRouter();
   const { data: session, update } = useSession();
   const [activeTab, setActiveTab] = useState<"profile" | "password" | "notifications">("profile");
 

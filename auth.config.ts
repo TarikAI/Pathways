@@ -27,17 +27,14 @@ export const authConfig = {
       const isAuthPage = ['/login', '/register', '/forgot-password'].includes(nextUrl.pathname);
       const isPublicPage = ['/'].includes(nextUrl.pathname);
 
-      // Redirect logged-in users from auth pages to their dashboard
       if (isAuthPage && isLoggedIn && auth?.user?.role) {
         return NextResponse.redirect(new URL(roleHomePath(auth.user.role), nextUrl));
       }
 
-      // Redirect logged-in users from public pages to their dashboard
       if (isPublicPage && isLoggedIn && auth?.user?.role) {
         return NextResponse.redirect(new URL(roleHomePath(auth.user.role), nextUrl));
       }
 
-      // Redirect unauthenticated users from protected pages
       if (!isLoggedIn && !isAuthPage && !isPublicPage) {
         return NextResponse.redirect(new URL('/login', nextUrl));
       }

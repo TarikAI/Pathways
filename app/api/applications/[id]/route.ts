@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -120,24 +121,20 @@ export async function PATCH(
         },
       });
 
-      await db.notification.create({
-        data: {
-          userId: application.studentId,
-          type: "APPLICATION_DECISION",
-          title: "Application Approved!",
-          body: `Congratulations! Your application for ${program.title} has been approved.`,
-          link: "/student/internship",
-        },
+      await createNotification({
+        userId: application.studentId,
+        type: "APPLICATION_DECISION",
+        title: "Application Approved!",
+        body: `Congratulations! Your application for ${program.title} has been approved.`,
+        link: "/student/internship",
       });
 
-      await db.notification.create({
-        data: {
-          userId: data.academicSupervisorId,
-          type: "APPLICATION_DECISION",
-          title: "New Student Assigned",
-          body: `${application.student.fullName} has been assigned to your supervision for ${program.title}.`,
-          link: `/supervisor/students/${application.studentId}`,
-        },
+      await createNotification({
+        userId: data.academicSupervisorId,
+        type: "APPLICATION_DECISION",
+        title: "New Student Assigned",
+        body: `${application.student.fullName} has been assigned to your supervision for ${program.title}.`,
+        link: `/supervisor/students/${application.studentId}`,
       });
 
       await db.auditLog.create({
@@ -155,14 +152,12 @@ export async function PATCH(
         },
       });
     } else if (data.status === "REJECTED") {
-      await db.notification.create({
-        data: {
-          userId: application.studentId,
-          type: "APPLICATION_DECISION",
-          title: "Application Update",
-          body: `Your application for ${application.program.title} was not approved.`,
-          link: "/student/applications",
-        },
+      await createNotification({
+        userId: application.studentId,
+        type: "APPLICATION_DECISION",
+        title: "Application Update",
+        body: `Your application for ${application.program.title} was not approved.`,
+        link: "/student/applications",
       });
 
       await db.auditLog.create({
@@ -181,9 +176,9 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
+    if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: (err as any).errors },
+        { error: "Validation error", details: err.flatten() },
         { status: 400 }
       );
     }

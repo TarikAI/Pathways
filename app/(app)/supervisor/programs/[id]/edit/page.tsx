@@ -29,7 +29,6 @@ export default async function EditProgramPage({
     notFound();
   }
 
-  // Check if user owns the program or is admin
   if (session.user.role !== "ADMIN" && program.createdById !== session.user.id) {
     redirect("/supervisor/programs");
   }

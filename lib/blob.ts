@@ -1,17 +1,8 @@
 import { put } from "@vercel/blob";
 
-export async function uploadFile(
-  file: File,
-  options?: {
-    /**
-     * If true, the file will be publicly accessible.
-     * @default false
-     */
-    public?: boolean;
-  }
-) {
+export async function uploadFile(file: File) {
   const blob = await put(file.name, file, {
-    access: options?.public ? "public" : "private",
+    access: "public",
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 
@@ -20,7 +11,6 @@ export async function uploadFile(
     downloadUrl: blob.downloadUrl,
     filename: blob.pathname,
     contentType: blob.contentType,
-    size: blob.size,
   };
 }
 

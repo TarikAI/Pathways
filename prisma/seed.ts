@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -8,7 +8,7 @@ const DEFAULT_PASSWORD = "Pathways!2026";
 async function main() {
   const hash = await bcrypt.hash(DEFAULT_PASSWORD, BCRYPT_COST);
 
-  const admin = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "admin@pathways.dev" },
     update: {},
     create: {
@@ -52,7 +52,7 @@ async function main() {
     },
   });
 
-  const fieldSup2 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "fieldsup2@pathways.dev" },
     update: {},
     create: {
@@ -85,7 +85,7 @@ async function main() {
     },
   });
 
-  const student3 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "student3@pathways.dev" },
     update: {},
     create: {
@@ -96,7 +96,7 @@ async function main() {
     },
   });
 
-  const student4 = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "student4@pathways.dev" },
     update: {},
     create: {
@@ -122,7 +122,7 @@ async function main() {
     },
   });
 
-  const prog2 = await prisma.trainingProgram.upsert({
+  await prisma.trainingProgram.upsert({
     where: { id: "prog-2" },
     update: {},
     create: {
@@ -151,7 +151,7 @@ async function main() {
     },
   });
 
-  const app2 = await prisma.trainingApplication.upsert({
+  await prisma.trainingApplication.upsert({
     where: { id: "app-2" },
     update: {},
     create: {

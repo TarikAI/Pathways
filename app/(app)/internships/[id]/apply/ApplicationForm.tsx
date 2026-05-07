@@ -17,7 +17,7 @@ type ApplicationForm = z.infer<typeof applicationSchema>;
 
 export default function ApplicationForm({
   programId,
-  programTitle,
+  programTitle: _programTitle,
 }: {
   programId: string;
   programTitle: string;

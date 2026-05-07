@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -102,14 +103,12 @@ export async function POST(req: Request) {
       },
     });
 
-    await db.notification.create({
-      data: {
-        userId: program.createdById,
-        type: "APPLICATION_DECISION",
-        title: "New Program Application",
-        body: `${session.user.fullName} has applied for ${program.title}`,
-        link: `/supervisor/programs/${program.id}`,
-      },
+    await createNotification({
+      userId: program.createdById,
+      type: "APPLICATION_DECISION",
+      title: "New Program Application",
+      body: `${session.user.fullName} has applied for ${program.title}`,
+      link: `/supervisor/programs/${program.id}`,
     });
 
     await db.auditLog.create({
@@ -124,9 +123,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json(application, { status: 201 });
   } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
+    if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: (err as any).errors },
+        { error: "Validation error", details: err.flatten() },
         { status: 400 }
       );
     }

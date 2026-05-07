@@ -1,14 +1,15 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LogIn, UserCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { Role } from "@prisma/client";
+import Image from "next/image";
+import Link from "next/link";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -18,6 +19,14 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
@@ -49,7 +58,6 @@ export default function LoginPage() {
     if (res?.error) {
       setError("Invalid credentials");
     }
-    // Session update will trigger the useEffect to redirect
   };
 
   return (
@@ -58,13 +66,15 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
           <div className="mb-8">
-            <img src="/logo-bg.jpg" alt="Pathways" className="w-[200px] h-auto mx-auto mb-4" />
+            <Image src="/logo-bg.jpg" alt="Pathways" width={200} height={80} className="mx-auto mb-4" priority />
             <p className="text-white/80 text-xl">Cooperative Training Platform</p>
           </div>
           <div className="max-w-md">
-            <img
+            <Image
               src="/vector_illustration.png"
               alt="Students and supervisors working together"
+              width={400}
+              height={300}
               className="w-full h-auto object-contain"
             />
           </div>
@@ -127,9 +137,9 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <a href="/forgot-password" className="text-sm text-brand-teal hover:underline">
+                <Link href="/forgot-password" className="text-sm text-brand-teal hover:underline">
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full">
@@ -140,9 +150,9 @@ export default function LoginPage() {
 
             <p className="text-center mt-6 text-sm text-gray-600">
               Don&apos;t have an account?{" "}
-              <a href="/register" className="text-brand-teal font-semibold hover:underline">
+              <Link href="/register" className="text-brand-teal font-semibold hover:underline">
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>

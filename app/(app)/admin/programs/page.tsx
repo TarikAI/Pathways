@@ -1,11 +1,11 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
-import { formatDate, applicationStatusClass } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
-import { Briefcase, Users, FileText, Edit, Eye } from "lucide-react";
+import { Briefcase, Users, Edit, Eye } from "lucide-react";
 
 export default async function AdminProgramsPage() {
-  const session = await requireRole(["ADMIN"]);
+  await requireRole(["ADMIN"]);
 
   const programs = await db.trainingProgram.findMany({
     where: { active: true },

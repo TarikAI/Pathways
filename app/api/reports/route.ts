@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -44,14 +45,12 @@ export async function POST(req: Request) {
       }
     });
 
-    await db.notification.create({
-      data: {
-        userId: internship.academicSupervisorId,
-        type: "REPORT_SUBMITTED",
-        title: "New Report Submitted",
-        body: `${session.user.fullName} submitted a report for week ${data.weekNumber}`,
-        link: `/supervisor/reports/${internship.id}`,
-      },
+    await createNotification({
+      userId: internship.academicSupervisorId,
+      type: "REPORT_SUBMITTED",
+      title: "New Report Submitted",
+      body: `${session.user.fullName} submitted a report for week ${data.weekNumber}`,
+      link: `/supervisor/reports/${internship.id}`,
     });
 
     await db.auditLog.create({
@@ -67,14 +66,14 @@ export async function POST(req: Request) {
     return NextResponse.json(report, { status: 201 });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return NextResponse.json({ error: "Validation error", details: err.errors }, { status: 400 });
+      return NextResponse.json({ error: "Validation error", details: err.flatten() }, { status: 400 });
     }
     const message = err instanceof Error ? err.message : "Internal server error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   try {
     const session = await requireRole(["STUDENT", "ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
 

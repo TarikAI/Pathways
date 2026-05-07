@@ -2,7 +2,7 @@ import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Building2, Users, FileText, Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Calendar, Users, FileText, Edit } from "lucide-react";
 import { formatDate, applicationStatusClass } from "@/lib/utils";
 
 export default async function ProgramDetailPage({

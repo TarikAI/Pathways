@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
-import { ArrowLeft, Star, CheckCircle2, FileText, Briefcase } from "lucide-react";
+import { ArrowLeft, Star, CheckCircle2, FileText } from "lucide-react";
 import Link from "next/link";
 
 interface Report {
@@ -34,7 +34,7 @@ interface Internship {
   progressPercent: number;
   startDate: string;
   endDate: string;
-  student: { id: string; fullName: string; email: string; fullName: string };
+  student: { id: string; fullName: string; email: string };
   program: { title: string; organization: string; durationWeeks: number };
   reports: Report[];
   evaluations: Evaluation[];

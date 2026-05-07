@@ -46,11 +46,6 @@ export default async function SupervisorProgramsPage() {
               key={program.id}
               program={program}
               canDelete={session.user.role === "ADMIN" || program.createdById === session.user.id}
-              onDelete={(id) => {
-                // In a real app, you'd use a server action or revalidate the route
-                // For now, we'll just reload the page
-                console.log("Deleted program:", id);
-              }}
             />
           ))}
         </div>

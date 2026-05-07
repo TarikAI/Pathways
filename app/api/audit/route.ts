@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
-    const session = await requireRole(["ADMIN"]);
+    await requireRole(["ADMIN"]);
 
     const url = new URL(req.url);
     const limit = parseInt(url.searchParams.get("limit") || "100");

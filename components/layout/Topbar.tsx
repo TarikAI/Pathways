@@ -3,6 +3,7 @@
 import { Bell, Search, User, LogOut, ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 
 export default function Topbar() {
@@ -54,7 +55,7 @@ export default function Topbar() {
   return (
     <header className="h-16 bg-brand-white shadow-sm flex items-center justify-between px-8 border-b border-black/5 shrink-0">
       <div className="flex items-center gap-4">
-        <img src="/logo-bg.jpg" alt="Pathways" className="h-10 w-auto" />
+        <Image src="/logo-bg.jpg" alt="Pathways" width={100} height={40} priority />
         <div className="flex items-center bg-brand-beige rounded-lg px-3 py-2 w-64 border border-transparent focus-within:border-brand-teal transition-colors">
           <Search size={18} className="text-brand-navy/50 mr-2" />
           <input

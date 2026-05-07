@@ -18,13 +18,13 @@ export async function verifyPassword(hash: string, password: string): Promise<bo
 
 export async function generateResetToken(userId: string): Promise<string> {
   const token = crypto.randomBytes(32).toString("hex");
-  const expires = new Date(Date.now() + 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
   await db.passwordResetToken.create({
     data: {
       userId,
       token,
-      expires,
+      expiresAt,
     },
   });
 
@@ -36,7 +36,7 @@ export async function verifyResetToken(token: string): Promise<string | null> {
     where: { token },
   });
 
-  if (!resetToken || resetToken.expires < new Date()) {
+  if (!resetToken || resetToken.expiresAt < new Date()) {
     if (resetToken) {
       await db.passwordResetToken.delete({ where: { token } });
     }

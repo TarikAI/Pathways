@@ -1,8 +1,9 @@
 "use client";
 
 import { formatDate } from "@/lib/utils";
-import { Link } from "next/link";
-import { Plus, Users, FileText, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Users, FileText, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface Program {
@@ -23,10 +24,10 @@ interface Program {
 interface ProgramCardProps {
   program: Program;
   canDelete: boolean;
-  onDelete: (id: string) => void;
 }
 
-export function ProgramCard({ program, canDelete, onDelete }: ProgramCardProps) {
+export function ProgramCard({ program, canDelete }: ProgramCardProps) {
+  const router = useRouter();
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -45,7 +46,7 @@ export function ProgramCard({ program, canDelete, onDelete }: ProgramCardProps) 
         throw new Error(data.error || "Failed to delete program");
       }
 
-      onDelete(program.id);
+      router.refresh();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to delete program";
       alert(message);
