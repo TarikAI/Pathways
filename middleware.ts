@@ -5,12 +5,7 @@ export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: [
-    '/',
-    '/student/:path*',
-    '/supervisor/:path*',
-    '/admin/:path*',
-    '/messages/:path*',
-    '/notifications/:path*',
-    '/settings/:path*',
+    // Match all paths except api, _next, and static files
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

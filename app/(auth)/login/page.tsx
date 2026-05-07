@@ -1,12 +1,14 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LogIn, UserCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { Role } from "@prisma/client";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,6 +25,18 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user?.role) {
+      const role = session.user.role as Role;
+      let dashboardPath = "/dashboard";
+      if (role === "STUDENT") dashboardPath = "/student/dashboard";
+      else if (role === "ACADEMIC_SUPERVISOR" || role === "FIELD_SUPERVISOR") dashboardPath = "/supervisor/dashboard";
+      else if (role === "ADMIN") dashboardPath = "/admin/users";
+      router.push(dashboardPath);
+    }
+  }, [session, router]);
 
   const onSubmit = async (data: LoginForm) => {
     setError("");
@@ -34,10 +48,8 @@ export default function LoginPage() {
 
     if (res?.error) {
       setError("Invalid credentials");
-    } else {
-      router.push("/");
-      router.refresh();
     }
+    // Session update will trigger the useEffect to redirect
   };
 
   return (

@@ -24,13 +24,21 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }: { auth: Session | null, request: { nextUrl: URL } }) {
       const isLoggedIn = !!auth?.user;
-      const isAuthRoute = ['/login', '/register', '/forgot-password', '/'].includes(nextUrl.pathname);
+      const isAuthPage = ['/login', '/register', '/forgot-password'].includes(nextUrl.pathname);
+      const isPublicPage = ['/'].includes(nextUrl.pathname);
 
-      if (isAuthRoute && isLoggedIn && auth?.user?.role) {
+      // Redirect logged-in users from auth pages to their dashboard
+      if (isAuthPage && isLoggedIn && auth?.user?.role) {
         return NextResponse.redirect(new URL(roleHomePath(auth.user.role), nextUrl));
       }
 
-      if (!isLoggedIn && !isAuthRoute) {
+      // Redirect logged-in users from public pages to their dashboard
+      if (isPublicPage && isLoggedIn && auth?.user?.role) {
+        return NextResponse.redirect(new URL(roleHomePath(auth.user.role), nextUrl));
+      }
+
+      // Redirect unauthenticated users from protected pages
+      if (!isLoggedIn && !isAuthPage && !isPublicPage) {
         return NextResponse.redirect(new URL('/login', nextUrl));
       }
 
