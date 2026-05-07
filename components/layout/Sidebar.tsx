@@ -52,7 +52,7 @@ export default function Sidebar({ role }: { role: string }) {
   return (
     <aside className="w-64 bg-brand-navy text-white flex flex-col h-screen">
       <div className="p-4 border-b border-white/10 flex items-center justify-center">
-        <img src="/logo.png" alt="Pathways" className="w-[150px] h-auto" />
+        <img src="/logo-bg.jpg" alt="Pathways" className="w-[150px] h-auto" />
       </div>
       <nav className="flex-1 py-6 flex flex-col">
         {navItems.map((item) => {
