@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  FileText, 
-  MessageSquare, 
-  Bell, 
-  Settings, 
-  Users, 
-  Briefcase
+import {
+  LayoutDashboard,
+  FileText,
+  MessageSquare,
+  Bell,
+  Settings,
+  Users,
+  Briefcase,
+  BookOpen,
+  History
 } from "lucide-react";
 
 export default function Sidebar({ role }: { role: string }) {
@@ -18,17 +20,29 @@ export default function Sidebar({ role }: { role: string }) {
   const navItems = [
     ...(role === "STUDENT" ? [
       { label: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
-      { label: "Internship", href: "/student/internship", icon: Briefcase },
-      { label: "Reports", href: "/student/reports", icon: FileText },
+      { label: "Internships", href: "/internships", icon: Briefcase },
+      { label: "My Internship", href: "/student/internship", icon: BookOpen },
+      { label: "My Applications", href: "/student/applications", icon: FileText },
+      { label: "Evaluations", href: "/student/evaluations", icon: FileText },
     ] : []),
     ...(role === "ACADEMIC_SUPERVISOR" || role === "FIELD_SUPERVISOR" ? [
       { label: "Dashboard", href: "/supervisor/dashboard", icon: LayoutDashboard },
+      ...(role === "ACADEMIC_SUPERVISOR" ? [
+        { label: "Programs", href: "/supervisor/programs", icon: BookOpen },
+      ] : []),
+      ...(role === "FIELD_SUPERVISOR" ? [
+        { label: "Applications", href: "/supervisor/applications", icon: FileText },
+      ] : []),
       { label: "Students", href: "/supervisor/students", icon: Users },
       { label: "Reports", href: "/supervisor/reports", icon: FileText },
+      ...(role === "FIELD_SUPERVISOR" ? [
+        { label: "Evaluations", href: "/supervisor/evaluations", icon: FileText },
+      ] : []),
     ] : []),
     ...(role === "ADMIN" ? [
       { label: "Users", href: "/admin/users", icon: Users },
       { label: "Programs", href: "/admin/programs", icon: Briefcase },
+      { label: "Audit Logs", href: "/admin/audit", icon: History },
     ] : []),
     { label: "Messages", href: "/messages", icon: MessageSquare },
     { label: "Notifications", href: "/notifications", icon: Bell },
@@ -37,8 +51,8 @@ export default function Sidebar({ role }: { role: string }) {
 
   return (
     <aside className="w-64 bg-brand-navy text-white flex flex-col h-screen">
-      <div className="p-6 border-b border-white/10 flex items-center gap-3">
-        <div className="font-bold text-2xl tracking-wider text-brand-sky">PATHWAYS</div>
+      <div className="p-4 border-b border-white/10 flex items-center justify-center">
+        <img src="/logo.png" alt="Pathways" className="w-[150px] h-auto" />
       </div>
       <nav className="flex-1 py-6 flex flex-col">
         {navItems.map((item) => {

@@ -146,14 +146,11 @@ export default function RegisterPage() {
                   {...register("role")}
                 >
                   <option value="">Select your role</option>
-                  {roles.map((role) => {
-                    const Icon = role.icon;
-                    return (
-                      <option key={role.value} value={role.value}>
-                        {role.label}
-                      </option>
-                    );
-                  })}
+                  {roles.map((role) => (
+                    <option key={role.value} value={role.value}>
+                      {role.label}
+                    </option>
+                  ))}
                 </select>
                 {errors.role && <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>}
               </div>

@@ -2,7 +2,7 @@ import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 
 export default async function AdminUsersPage() {
-  const session = await requireRole(["ADMIN"]);
+  await requireRole(["ADMIN"]);
 
   const users = await db.user.findMany({
     orderBy: { createdAt: 'desc' }

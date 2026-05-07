@@ -1,30 +1,169 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Users, FileText, BarChart3, MessageSquare, CheckCircle2, Briefcase, GraduationCap, Building } from "lucide-react";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-brand-beige">
-      <header className="h-20 flex items-center justify-between px-10 bg-brand-navy text-white">
-        <div className="text-2xl font-bold tracking-widest text-brand-sky">PATHWAYS</div>
-        <nav className="flex gap-6 items-center">
-          <Link href="/login" className="hover:text-brand-sky transition-colors">Sign In</Link>
-          <Link href="/register" className="btn bg-brand-teal text-white hover:opacity-90">
+    <div className="min-h-screen flex flex-col bg-white">
+      <header className="h-20 flex items-center justify-between px-6 md:px-10 bg-white border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-brand-navy text-brand-teal rounded-lg flex items-center justify-center font-bold text-xl">
+            P
+          </div>
+          <div className="text-xl font-bold text-brand-navy">Pathways</div>
+        </div>
+        <nav className="flex gap-4 md:gap-6 items-center">
+          <Link href="/login" className="text-gray-600 hover:text-brand-navy transition-colors text-sm font-medium">
+            Sign In
+          </Link>
+          <Link href="/register" className="btn bg-brand-teal text-white hover:bg-brand-navy transition-colors text-sm">
             Get Started
           </Link>
         </nav>
       </header>
-      
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-brand-navy mb-6 tracking-tight">
-          Modernizing <span className="text-brand-teal">Cooperative</span> Training
-        </h1>
-        <p className="text-xl md:text-2xl text-brand-navy/70 max-w-3xl mb-10">
-          The all-in-one platform connecting students, academic advisors, and field supervisors to ensure successful internships.
-        </p>
-        <Link href="/login" className="btn btn-primary text-lg px-8 py-4">
-          Access the Platform <ArrowRight className="ml-2" />
-        </Link>
+
+      <main>
+        <section className="py-20 md:py-32 px-6 bg-gradient-to-b from-brand-beige/30 to-white">
+          <div className="max-w-6xl mx-auto text-center">
+            <div className="inline-block px-4 py-1.5 bg-brand-teal/10 text-brand-teal rounded-full text-sm font-medium mb-6">
+              Cooperative Training Management Platform
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-brand-navy mb-6 leading-tight">
+              Streamline Your <span className="text-brand-teal">Internship</span> Experience
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+              Connect students, academic advisors, and field supervisors in one unified platform. Track progress, submit reports, and ensure successful cooperative training outcomes.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
+                Get Started Free <ArrowRight className="ml-2 inline w-5 h-5" />
+              </Link>
+              <Link href="/login" className="btn btn-outline px-8 py-4 text-lg">
+                Sign In
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-navy text-center mb-4">
+              Built for Everyone
+            </h2>
+            <p className="text-gray-600 text-center mb-16 max-w-2xl mx-auto">
+              Pathways brings together all stakeholders in the cooperative training ecosystem
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="card group hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-brand-sky/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-teal/20 transition-colors">
+                  <GraduationCap className="w-7 h-7 text-brand-navy" />
+                </div>
+                <h3 className="text-xl font-bold text-brand-navy mb-2">For Students</h3>
+                <p className="text-gray-600 mb-4">
+                  Discover opportunities, track your internship progress, submit weekly reports, and receive evaluations from your supervisors.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Browse training programs</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Submit weekly reports</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Track evaluations</li>
+                </ul>
+              </div>
+
+              <div className="card group hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-brand-sky/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-teal/20 transition-colors">
+                  <Users className="w-7 h-7 text-brand-navy" />
+                </div>
+                <h3 className="text-xl font-bold text-brand-navy mb-2">For Academic Supervisors</h3>
+                <p className="text-gray-600 mb-4">
+                  Create training programs, review applications, monitor student progress, and cosign field supervisor evaluations.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Publish programs</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Review reports</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Cosign evaluations</li>
+                </ul>
+              </div>
+
+              <div className="card group hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-brand-sky/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-teal/20 transition-colors">
+                  <Building className="w-7 h-7 text-brand-navy" />
+                </div>
+                <h3 className="text-xl font-bold text-brand-navy mb-2">For Field Supervisors</h3>
+                <p className="text-gray-600 mb-4">
+                  Review student applications, assign academic supervisors, submit weekly evaluations, and communicate with the team.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Approve applications</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Submit evaluations</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Message team</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 px-6 bg-brand-navy text-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              Everything You Need
+            </h2>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-brand-teal rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <h3 className="font-semibold mb-2">Program Management</h3>
+                <p className="text-gray-300 text-sm">Create and manage training programs with application tracking</p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-12 h-12 bg-brand-teal rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <h3 className="font-semibold mb-2">Weekly Reports</h3>
+                <p className="text-gray-300 text-sm">Students submit progress reports for supervisor review</p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-12 h-12 bg-brand-teal rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="w-6 h-6" />
+                </div>
+                <h3 className="font-semibold mb-2">Evaluations</h3>
+                <p className="text-gray-300 text-sm">Comprehensive scoring with academic cosign workflow</p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-12 h-12 bg-brand-teal rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <MessageSquare className="w-6 h-6" />
+                </div>
+                <h3 className="font-semibold mb-2">Team Messaging</h3>
+                <p className="text-gray-300 text-sm">Built-in chat for seamless communication</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 px-6 bg-brand-beige/30">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-navy mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-xl text-gray-600 mb-10">
+              Join hundreds of students, academic advisors, and field supervisors using Pathways to streamline cooperative training.
+            </p>
+            <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
+              Create Your Account <ArrowRight className="ml-2 inline w-5 h-5" />
+            </Link>
+          </div>
+        </section>
       </main>
+
+      <footer className="py-8 px-6 bg-brand-navy text-white border-t border-white/10">
+        <div className="max-w-6xl mx-auto text-center text-gray-400 text-sm">
+          <p>&copy; 2026 Pathways. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

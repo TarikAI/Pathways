@@ -3,6 +3,48 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "./db";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { Role } from "@prisma/client";
+import crypto from "crypto";
+
+export const BCRYPT_COST = 12;
+
+export async function hashPassword(password: string, cost: number = BCRYPT_COST): Promise<string> {
+  return bcrypt.hash(password, cost);
+}
+
+export async function verifyPassword(hash: string, password: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
+export async function generateResetToken(userId: string): Promise<string> {
+  const token = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 60 * 60 * 1000);
+
+  await db.passwordResetToken.create({
+    data: {
+      userId,
+      token,
+      expires,
+    },
+  });
+
+  return token;
+}
+
+export async function verifyResetToken(token: string): Promise<string | null> {
+  const resetToken = await db.passwordResetToken.findUnique({
+    where: { token },
+  });
+
+  if (!resetToken || resetToken.expires < new Date()) {
+    if (resetToken) {
+      await db.passwordResetToken.delete({ where: { token } });
+    }
+    return null;
+  }
+
+  return resetToken.userId;
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -41,16 +83,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
-        token.fullName = (user as any).fullName;
+        token.role = user.role;
+        token.fullName = user.fullName;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id as string;
-        (session.user as any).role = token.role as string;
-        (session.user as any).fullName = token.fullName as string;
+        session.user.id = token.id ?? "";
+        session.user.role = (token.role ?? "STUDENT") as Role;
+        session.user.fullName = token.fullName ?? "";
       }
       return session;
     },

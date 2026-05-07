@@ -4,5 +4,13 @@ import { authConfig } from "./auth.config";
 export default NextAuth(authConfig).auth;
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login|register|forgot-password).*)'],
+  matcher: [
+    '/',
+    '/student/:path*',
+    '/supervisor/:path*',
+    '/admin/:path*',
+    '/messages/:path*',
+    '/notifications/:path*',
+    '/settings/:path*',
+  ],
 };

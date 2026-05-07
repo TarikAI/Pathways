@@ -45,21 +45,22 @@ enum NotificationType {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  passwordHash    String
-  fullName        String
-  role            Role
-  phone           String?
-  avatarUrl       String?
-  emailVerified   DateTime?
-  notifyByEmail   Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id                  String                @id @default(cuid())
+  email               String                @unique
+  passwordHash        String
+  fullName            String
+  role                Role
+  phone               String?
+  avatarUrl           String?
+  emailVerified       DateTime?
+  notifyByEmail       Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 
   studentInternships  Internship[]          @relation("StudentInternship")
   academicInternships Internship[]          @relation("AcademicSupInternship")
   fieldInternships    Internship[]          @relation("FieldSupInternship")
+  createdPrograms     TrainingProgram[]     @relation("ProgramCreator")
   applications        TrainingApplication[]
   notifications       Notification[]
   authoredReviews     ReportReview[]
@@ -81,15 +82,21 @@ model PasswordResetToken {
 }
 
 model TrainingProgram {
-  id           String   @id @default(cuid())
-  title        String
-  description  String   @db.Text
-  organization String
-  durationWeeks Int
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  applications TrainingApplication[]
-  internships  Internship[]
+  id                 String   @id @default(cuid())
+  title              String
+  description        String   @db.Text
+  organization       String
+  durationWeeks      Int
+  seats              Int      @default(10)
+  applicationDeadline DateTime?
+  createdById        String
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  createdBy          User     @relation("ProgramCreator", fields: [createdById], references: [id])
+  applications       TrainingApplication[]
+  internships        Internship[]
+
+  @@index([createdById])
 }
 
 model TrainingApplication {
@@ -97,13 +104,16 @@ model TrainingApplication {
   studentId   String
   programId   String
   status      ApplicationStatus @default(PENDING)
+  coverLetter String?           @db.Text
   message     String?           @db.Text
   decidedById String?
   decidedAt   DateTime?
   createdAt   DateTime          @default(now())
   student     User              @relation(fields: [studentId], references: [id])
   program     TrainingProgram   @relation(fields: [programId], references: [id])
+  internship  Internship?
 
+  @@unique([studentId, programId])
   @@index([studentId])
   @@index([programId])
   @@index([status])
@@ -120,18 +130,21 @@ model Internship {
   status               InternshipStatus @default(ACTIVE)
   weekNumber           Int              @default(0)
   progressPercent      Int              @default(0)
+  appliedFromId        String?          @unique
   createdAt            DateTime         @default(now())
 
-  student            User            @relation("StudentInternship", fields: [studentId], references: [id])
-  academicSupervisor User            @relation("AcademicSupInternship", fields: [academicSupervisorId], references: [id])
-  fieldSupervisor    User            @relation("FieldSupInternship", fields: [fieldSupervisorId], references: [id])
-  program            TrainingProgram @relation(fields: [programId], references: [id])
+  student            User                  @relation("StudentInternship", fields: [studentId], references: [id])
+  academicSupervisor User                  @relation("AcademicSupInternship", fields: [academicSupervisorId], references: [id])
+  fieldSupervisor    User                  @relation("FieldSupInternship", fields: [fieldSupervisorId], references: [id])
+  program            TrainingProgram       @relation(fields: [programId], references: [id])
+  appliedFrom        TrainingApplication? @relation(fields: [appliedFromId], references: [id])
   reports            Report[]
   evaluations        Evaluation[]
 
   @@index([studentId])
   @@index([academicSupervisorId])
   @@index([fieldSupervisorId])
+  @@index([appliedFromId])
 }
 
 model Report {

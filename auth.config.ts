@@ -1,24 +1,40 @@
+import { NextResponse } from "next/server";
+import type { Session } from "next-auth";
+import { Role } from "@prisma/client";
+
+function roleHomePath(role: Role): string {
+  switch (role) {
+    case "STUDENT":
+      return "/student/dashboard";
+    case "ACADEMIC_SUPERVISOR":
+    case "FIELD_SUPERVISOR":
+      return "/supervisor/dashboard";
+    case "ADMIN":
+      return "/admin/users";
+    default:
+      return "/dashboard";
+  }
+}
+
 export const authConfig = {
   providers: [],
   pages: {
     signIn: '/login',
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }: { auth: any, request: { nextUrl: URL } }) {
+    authorized({ auth, request: { nextUrl } }: { auth: Session | null, request: { nextUrl: URL } }) {
       const isLoggedIn = !!auth?.user;
       const isAuthRoute = ['/login', '/register', '/forgot-password', '/'].includes(nextUrl.pathname);
-      if (isAuthRoute) {
-        if (isLoggedIn) {
-            // Basic role redirect
-            const role = auth.user?.role;
-            if (role === 'STUDENT') return Response.redirect(new URL('/student/dashboard', nextUrl));
-            if (role === 'ACADEMIC_SUPERVISOR' || role === 'FIELD_SUPERVISOR') return Response.redirect(new URL('/supervisor/dashboard', nextUrl));
-            if (role === 'ADMIN') return Response.redirect(new URL('/admin/users', nextUrl));
-            return Response.redirect(new URL('/dashboard', nextUrl));
-        }
-        return true;
+
+      if (isAuthRoute && isLoggedIn && auth?.user?.role) {
+        return NextResponse.redirect(new URL(roleHomePath(auth.user.role), nextUrl));
       }
-      return isLoggedIn;
+
+      if (!isLoggedIn && !isAuthRoute) {
+        return NextResponse.redirect(new URL('/login', nextUrl));
+      }
+
+      return true;
     },
   },
 };
