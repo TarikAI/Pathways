@@ -30,3 +30,31 @@ node_modules
 *.njsproj
 *.sln
 *.sw?
+
+# Local env files
+.env
+.env*.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Claude Code
+.claude/
+
+# Temporary images
+Logo.jpeg
+Logonobg.png
+colors.jpeg
+signup_page_img.jpg
+vector_illustration.png
+
+# Conversation logs
+convo-*.md
+stitch_prompt.md
+
+# Project notes
+BUILD_PROMPT.md
