@@ -53,13 +53,16 @@ export default function Topbar() {
 
   return (
     <header className="h-16 bg-brand-white shadow-sm flex items-center justify-between px-8 border-b border-black/5 shrink-0">
-      <div className="flex items-center bg-brand-beige rounded-lg px-3 py-2 w-64 border border-transparent focus-within:border-brand-teal transition-colors">
-        <Search size={18} className="text-brand-navy/50 mr-2" />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="bg-transparent border-none outline-none text-sm w-full"
-        />
+      <div className="flex items-center gap-4">
+        <img src="/logo-bg.jpg" alt="Pathways" className="h-10 w-auto" />
+        <div className="flex items-center bg-brand-beige rounded-lg px-3 py-2 w-64 border border-transparent focus-within:border-brand-teal transition-colors">
+          <Search size={18} className="text-brand-navy/50 mr-2" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-transparent border-none outline-none text-sm w-full"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-6">

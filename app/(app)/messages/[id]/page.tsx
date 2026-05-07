@@ -135,7 +135,7 @@ export default function MessageThreadPage() {
   const otherParticipants = participants;
   const title =
     otherParticipants.length === 1
-      ? otherParticipants[0].fullName
+      ? otherParticipants[0]?.fullName || "Unknown"
       : `${otherParticipants.length} participants`;
 
   return (
