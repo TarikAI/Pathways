@@ -5,12 +5,12 @@ import { Plus } from "lucide-react";
 import { ProgramCard } from "./ProgramCard";
 
 export default async function SupervisorProgramsPage() {
-  const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
+  const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
 
   const programs = await db.trainingProgram.findMany({
-    where: session.user.role === "ACADEMIC_SUPERVISOR"
-      ? { createdById: session.user.id }
-      : {},
+    where: session.user.role === "ADMIN"
+      ? {}
+      : { createdById: session.user.id },
     include: {
       createdBy: {
         select: { id: true, fullName: true, email: true },

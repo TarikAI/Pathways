@@ -10,7 +10,7 @@ export default async function ProgramDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
+  const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
   const { id } = await params;
 
   const program = await db.trainingProgram.findUnique({

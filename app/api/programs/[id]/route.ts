@@ -50,7 +50,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
+    const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
     const { id } = await params;
     const body = await req.json();
     const data = updateProgramSchema.parse(body);
@@ -107,7 +107,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
+    const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
     const { id } = await params;
 
     const existing = await db.trainingProgram.findUnique({

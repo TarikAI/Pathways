@@ -28,7 +28,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
+    const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
     const body = await req.json();
     const data = createProgramSchema.parse(body);
 

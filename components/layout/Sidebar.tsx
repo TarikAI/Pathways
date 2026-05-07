@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -48,9 +47,6 @@ export default function Sidebar({ role }: { role: string }) {
 
   return (
     <aside className="w-64 bg-brand-navy text-white flex flex-col h-screen">
-      <div className="p-4 border-b border-white/10 flex items-center justify-center">
-        <Image src="/logo-bg.jpg" alt="Pathways" width={150} height={60} priority />
-      </div>
       <nav className="flex-1 py-6 flex flex-col">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
