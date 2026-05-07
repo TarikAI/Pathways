@@ -1,8 +1,8 @@
 import { requireRole } from "@/lib/auth-guards";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { Plus, Users, FileText } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import { ProgramCard } from "./ProgramCard";
 
 export default async function SupervisorProgramsPage() {
   const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
@@ -42,61 +42,16 @@ export default async function SupervisorProgramsPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {programs.map((program) => (
-            <div key={program.id} className="card">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-brand-navy">
-                    {program.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{program.organization}</p>
-                </div>
-                <Link
-                  href={`/supervisor/programs/${program.id}`}
-                  className="text-brand-teal hover:underline text-sm"
-                >
-                  View Details
-                </Link>
-              </div>
-
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                {program.description}
-              </p>
-
-              <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
-                <div className="flex items-center gap-1">
-                  <Users size={16} />
-                  <span>{program.seats} seats</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <FileText size={16} />
-                  <span>{program.durationWeeks} weeks</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t">
-                <div className="flex gap-4 text-sm">
-                  <span className="text-gray-500">
-                    <strong className="text-brand-navy">{program._count.applications}</strong>{" "}
-                    applicants
-                  </span>
-                  <span className="text-gray-500">
-                    <strong className="text-brand-navy">{program._count.internships}</strong>{" "}
-                    active
-                  </span>
-                </div>
-                <span className="text-xs text-gray-400">
-                  {formatDate(program.createdAt)}
-                </span>
-              </div>
-
-              {program.applicationDeadline && (
-                <div className="mt-3 pt-3 border-t">
-                  <span className="text-xs text-gray-500">
-                    Deadline: {formatDate(program.applicationDeadline)}
-                  </span>
-                </div>
-              )}
-            </div>
+            <ProgramCard
+              key={program.id}
+              program={program}
+              canDelete={session.user.role === "ADMIN" || program.createdById === session.user.id}
+              onDelete={(id) => {
+                // In a real app, you'd use a server action or revalidate the route
+                // For now, we'll just reload the page
+                console.log("Deleted program:", id);
+              }}
+            />
           ))}
         </div>
       )}

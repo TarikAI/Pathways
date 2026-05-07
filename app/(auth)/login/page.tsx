@@ -58,7 +58,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
           <div className="mb-8">
-            <h1 className="text-6xl font-bold text-brand-sky tracking-widest mb-4">PATHWAYS</h1>
+            <img src="/logo-bg.jpg" alt="Pathways" className="w-[200px] h-auto mx-auto mb-4" />
             <p className="text-white/80 text-xl">Cooperative Training Platform</p>
           </div>
           <div className="max-w-md">

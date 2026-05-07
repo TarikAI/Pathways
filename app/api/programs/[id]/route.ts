@@ -30,9 +30,6 @@ export async function GET(
             },
           },
         },
-        _count: {
-          select: { applications: true, internships: true },
-        },
       },
     });
 
@@ -55,37 +52,41 @@ export async function PATCH(
     const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
     const { id } = await params;
     const body = await req.json();
-    const data = updateProgramSchema.parse({ ...body, id });
+    const data = updateProgramSchema.parse(body);
 
+    // Check if user owns the program or is admin
     const existing = await db.trainingProgram.findUnique({
       where: { id },
+      select: { createdById: true },
     });
 
     if (!existing) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
-    if (existing.createdById !== session.user.id && session.user.role !== "ADMIN") {
+    if (session.user.role !== "ADMIN" && existing.createdById !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
+
+    // Handle empty string or undefined for optional date field
+    const deadline = data.applicationDeadline && data.applicationDeadline !== ""
+      ? new Date(data.applicationDeadline)
+      : null;
 
     const program = await db.trainingProgram.update({
       where: { id },
       data: {
-        ...data,
-        applicationDeadline: data.applicationDeadline
-          ? new Date(data.applicationDeadline)
-          : null,
+        ...(data.title !== undefined && { title: data.title }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.organization !== undefined && { organization: data.organization }),
+        ...(data.durationWeeks !== undefined && { durationWeeks: data.durationWeeks }),
+        ...(data.seats !== undefined && { seats: data.seats }),
+        ...(data.applicationDeadline !== undefined && { applicationDeadline: deadline }),
       },
-    });
-
-    await db.auditLog.create({
-      data: {
-        userId: session.user.id,
-        action: "UPDATE_PROGRAM",
-        entity: "TrainingProgram",
-        entityId: program.id,
-        metadata: { title: program.title },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true },
+        },
       },
     });
 
@@ -110,21 +111,33 @@ export async function DELETE(
     const session = await requireRole(["ACADEMIC_SUPERVISOR", "ADMIN"]);
     const { id } = await params;
 
+    // Check if program exists and user owns it or is admin
     const existing = await db.trainingProgram.findUnique({
       where: { id },
+      include: {
+        _count: {
+          select: { internships: true },
+        },
+      },
     });
 
     if (!existing) {
       return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
-    if (existing.createdById !== session.user.id && session.user.role !== "ADMIN") {
+    if (existing._count.internships > 0) {
+      return NextResponse.json(
+        { error: "Cannot delete program with active internships" },
+        { status: 400 }
+      );
+    }
+
+    if (session.user.role !== "ADMIN" && existing.createdById !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await db.trainingProgram.update({
+    await db.trainingProgram.delete({
       where: { id },
-      data: { active: false },
     });
 
     await db.auditLog.create({

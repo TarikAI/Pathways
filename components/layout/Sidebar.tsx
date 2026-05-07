@@ -27,12 +27,8 @@ export default function Sidebar({ role }: { role: string }) {
     ] : []),
     ...(role === "ACADEMIC_SUPERVISOR" || role === "FIELD_SUPERVISOR" ? [
       { label: "Dashboard", href: "/supervisor/dashboard", icon: LayoutDashboard },
-      ...(role === "ACADEMIC_SUPERVISOR" ? [
-        { label: "Programs", href: "/supervisor/programs", icon: BookOpen },
-      ] : []),
-      ...(role === "FIELD_SUPERVISOR" ? [
-        { label: "Applications", href: "/supervisor/applications", icon: FileText },
-      ] : []),
+      { label: "Programs", href: "/supervisor/programs", icon: BookOpen },
+      { label: "Applications", href: "/supervisor/applications", icon: FileText },
       { label: "Students", href: "/supervisor/students", icon: Users },
       { label: "Reports", href: "/supervisor/reports", icon: FileText },
       ...(role === "FIELD_SUPERVISOR" ? [

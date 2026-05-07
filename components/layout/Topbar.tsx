@@ -1,13 +1,15 @@
 "use client";
 
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, Search, User, LogOut, ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Topbar() {
   const { data: session } = useSession();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!session?.user) return;
@@ -29,7 +31,25 @@ export default function Topbar() {
     return () => clearInterval(interval);
   }, [session]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showMenu]);
+
   if (!session?.user) return null;
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
+    setShowMenu(false);
+  };
 
   return (
     <header className="h-16 bg-brand-white shadow-sm flex items-center justify-between px-8 border-b border-black/5 shrink-0">
@@ -56,25 +76,45 @@ export default function Topbar() {
           )}
         </Link>
 
-        <div className="flex items-center gap-3 border-l pl-6 border-gray-200">
-          <div className="w-8 h-8 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold text-sm">
-            {session.user.fullName?.charAt(0) || <User size={16} />}
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-brand-navy leading-none mb-1">
-              {session.user.fullName}
-            </span>
-            <span className="text-xs text-brand-navy/60 leading-none">
-              {session.user.role?.replace("_", " ")}
-            </span>
-          </div>
+        <div className="relative" ref={menuRef}>
           <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="ml-4 text-gray-400 hover:text-red-500 transition-colors"
-            title="Sign out"
+            onClick={() => setShowMenu(!showMenu)}
+            className="flex items-center gap-3 border-l pl-6 border-gray-200 hover:bg-gray-50 rounded-lg py-2 px-3 transition-colors"
           >
-            <LogOut size={18} />
+            <div className="w-8 h-8 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold text-sm">
+              {session.user.fullName?.charAt(0) || <User size={16} />}
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-semibold text-brand-navy leading-none mb-1">
+                {session.user.fullName}
+              </span>
+              <span className="text-xs text-brand-navy/60 leading-none">
+                {session.user.role?.replace("_", " ")}
+              </span>
+            </div>
+            <ChevronDown size={16} className="text-gray-400" />
           </button>
+
+          {showMenu && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+              <Link
+                href="/settings"
+                className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                onClick={() => setShowMenu(false)}
+              >
+                <User size={16} />
+                Settings
+              </Link>
+              <hr className="my-2 border-gray-100" />
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+              >
+                <LogOut size={16} />
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

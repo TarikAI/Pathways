@@ -1,47 +1,91 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createProgramSchema } from "@/lib/validators/program";
+import { createProgramSchema, updateProgramSchema } from "@/lib/validators/program";
 
-type ProgramForm = z.infer<typeof createProgramSchema>;
+type ProgramFormValues = z.infer<typeof createProgramSchema>;
 
-export default function ProgramForm() {
+interface Program {
+  id: string;
+  title: string;
+  description: string;
+  organization: string;
+  durationWeeks: number;
+  seats: number;
+  applicationDeadline: Date | null;
+}
+
+interface ProgramFormProps {
+  program?: Program;
+}
+
+export default function ProgramForm({ program }: ProgramFormProps) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const isEditing = !!program;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProgramForm>({
-    resolver: zodResolver(createProgramSchema),
+    reset,
+  } = useForm<ProgramFormValues>({
+    resolver: zodResolver(isEditing ? updateProgramSchema : createProgramSchema),
+    defaultValues: program ? {
+      title: program.title,
+      description: program.description,
+      organization: program.organization,
+      durationWeeks: program.durationWeeks,
+      seats: program.seats,
+      applicationDeadline: program.applicationDeadline
+        ? new Date(program.applicationDeadline).toISOString().slice(0, 16)
+        : "",
+    } : undefined,
   });
 
-  const onSubmit = async (data: ProgramForm) => {
+  useEffect(() => {
+    if (program) {
+      reset({
+        title: program.title,
+        description: program.description,
+        organization: program.organization,
+        durationWeeks: program.durationWeeks,
+        seats: program.seats,
+        applicationDeadline: program.applicationDeadline
+          ? new Date(program.applicationDeadline).toISOString().slice(0, 16)
+          : "",
+      });
+    }
+  }, [program, reset]);
+
+  const onSubmit = async (data: ProgramFormValues) => {
     setError("");
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/programs", {
-        method: "POST",
+      const url = isEditing ? `/api/programs/${program.id}` : "/api/programs";
+      const method = isEditing ? "PATCH" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (!res.ok) {
         const result = await res.json();
-        throw new Error(result.error || "Failed to create program");
+        throw new Error(result.error || `Failed to ${isEditing ? "update" : "create"} program`);
       }
 
       router.push("/supervisor/programs");
       router.refresh();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to create program";
+      const message = err instanceof Error ? err.message : `Failed to ${isEditing ? "update" : "create"} program`;
       setError(message);
       setSubmitting(false);
     }
@@ -163,7 +207,10 @@ export default function ProgramForm() {
             disabled={submitting}
             className="btn btn-primary flex-1"
           >
-            {submitting ? "Creating..." : "Create Program"}
+            {submitting
+              ? (isEditing ? "Updating..." : "Creating...")
+              : (isEditing ? "Update Program" : "Create Program")
+            }
           </button>
           <button
             type="button"

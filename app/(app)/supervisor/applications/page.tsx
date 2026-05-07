@@ -5,7 +5,7 @@ import { Users } from "lucide-react";
 import { ApplicationCard } from "./ApplicationCard";
 
 export default async function ApplicationsPage() {
-  const session = await requireRole(["FIELD_SUPERVISOR", "ADMIN"]);
+  const session = await requireRole(["ACADEMIC_SUPERVISOR", "FIELD_SUPERVISOR", "ADMIN"]);
 
   const applications = await db.trainingApplication.findMany({
     where: { status: "PENDING" },
