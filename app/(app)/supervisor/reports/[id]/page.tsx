@@ -34,8 +34,8 @@ export default async function SupervisorReportDetail({ params }: { params: Promi
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-      <Link href="/supervisor/dashboard" className="text-brand-teal hover:underline inline-flex items-center mb-6">
-        <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+      <Link href={`/supervisor/reports/internships/${report.internship.id}`} className="text-brand-teal hover:underline inline-flex items-center mb-6">
+        <ArrowLeft className="w-4 h-4 mr-2" /> Back to Reports
       </Link>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

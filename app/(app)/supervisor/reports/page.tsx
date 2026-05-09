@@ -64,7 +64,7 @@ export default async function SupervisorReportsPage() {
                   </td>
                   <td className="p-4 text-center">
                     <Link
-                      href={`/supervisor/reports/${internship.id}`}
+                      href={`/supervisor/reports/internships/${internship.id}`}
                       className="text-brand-teal hover:underline font-medium"
                     >
                       View Reports

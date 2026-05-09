@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       type: "REPORT_SUBMITTED",
       title: "New Report Submitted",
       body: `${session.user.fullName} submitted a report for week ${data.weekNumber}`,
-      link: `/supervisor/reports/${internship.id}`,
+      link: `/supervisor/reports/internships/${internship.id}`,
     });
 
     await db.auditLog.create({

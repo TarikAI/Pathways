@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
-import { FileText, ArrowLeft, Download } from "lucide-react";
+import { FileText, ArrowLeft, Download, Edit } from "lucide-react";
 
 export default async function StudentReportDetail({ params }: { params: Promise<{ id: string }> }) {
   const session = await requireRole(["STUDENT"]);
@@ -29,19 +29,27 @@ export default async function StudentReportDetail({ params }: { params: Promise<
       </Link>
       
       <div className="bg-white rounded-lg shadow-sm border border-brand-beige p-6">
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-brand-navy mb-2">{report.title}</h1>
             <p className="text-gray-600">Week {report.weekNumber} • {report.internship.program.title}</p>
           </div>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-            report.status === "APPROVED" ? "bg-green-100 text-green-800" :
-            report.status === "REJECTED" ? "bg-red-100 text-red-800" :
-            report.status === "UNDER_REVIEW" ? "bg-yellow-100 text-yellow-800" :
-            "bg-gray-100 text-gray-800"
-          }`}>
-            {report.status.replace("_", " ")}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+              report.status === "APPROVED" ? "bg-green-100 text-green-800" :
+              report.status === "REJECTED" ? "bg-red-100 text-red-800" :
+              report.status === "UNDER_REVIEW" ? "bg-yellow-100 text-yellow-800" :
+              "bg-gray-100 text-gray-800"
+            }`}>
+              {report.status.replace("_", " ")}
+            </span>
+            {(report.status === "DRAFT" || report.status === "SUBMITTED") && (
+              <Link href={`/student/reports/${report.id}/edit`} className="btn btn-secondary py-2 px-4 inline-flex items-center gap-2">
+                <Edit size={16} />
+                Edit
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="mb-8">
