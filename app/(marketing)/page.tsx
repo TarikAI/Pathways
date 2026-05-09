@@ -1,23 +1,126 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, Users, FileText, BarChart3, MessageSquare, CheckCircle2, Briefcase, GraduationCap, Building } from "lucide-react";
+import { ArrowRight, Users, FileText, BarChart3, MessageSquare, CheckCircle2, Briefcase, GraduationCap, Building, User, LogOut, ChevronDown } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 
 export default function LandingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showMenu]);
+
+  if (!mounted) {
+    return null; // Avoid hydration mismatch
+  }
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
+    setShowMenu(false);
+  };
+
+  const userAvatar = session?.user ? (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="flex items-center gap-3 border-l pl-6 border-gray-200 hover:bg-gray-50 rounded-lg py-2 px-3 transition-colors"
+      >
+        <div className="w-10 h-10 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold">
+          {session.user.fullName?.charAt(0) || <User size={18} />}
+        </div>
+        <div className="flex flex-col items-start">
+          <span className="text-sm font-semibold text-brand-navy leading-none mb-1">
+            {session.user.fullName}
+          </span>
+          <span className="text-xs text-brand-navy/60 leading-none">
+            {session.user.role?.replace("_", " ")}
+          </span>
+        </div>
+        <ChevronDown size={16} className="text-gray-400" />
+      </button>
+
+      {showMenu && (
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            onClick={() => setShowMenu(false)}
+          >
+            <Briefcase size={16} />
+            Dashboard
+          </Link>
+          <Link
+            href="/settings"
+            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            onClick={() => setShowMenu(false)}
+          >
+            <User size={16} />
+            Settings
+          </Link>
+          <hr className="my-2 border-gray-100" />
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
+        </div>
+      )}
+    </div>
+  ) : (
+    <>
+      <Link href="/login" className="text-gray-600 hover:text-brand-navy transition-colors text-sm font-medium">
+        Sign In
+      </Link>
+      <Link href="/register" className="btn bg-brand-teal text-white hover:bg-brand-navy transition-colors text-sm">
+        Get Started
+      </Link>
+    </>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <header className="h-20 flex items-center justify-between px-6 md:px-10 bg-white border-b border-gray-100">
+      <header className="h-40 flex items-center justify-between px-6 md:px-10 bg-white border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-navy text-brand-teal rounded-lg flex items-center justify-center font-bold text-xl">
-            P
-          </div>
-          <div className="text-xl font-bold text-brand-navy">Pathways</div>
+          {!logoError ? (
+            <img
+              src="/logo-bg.jpg"
+              alt="Pathways"
+              width={350}
+              height={150}
+              className="h-[150px] w-auto object-contain"
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            <div className="w-16 h-16 bg-brand-navy text-brand-teal rounded-lg flex items-center justify-center font-bold text-3xl">
+              P
+            </div>
+          )}
         </div>
         <nav className="flex gap-4 md:gap-6 items-center">
-          <Link href="/login" className="text-gray-600 hover:text-brand-navy transition-colors text-sm font-medium">
-            Sign In
-          </Link>
-          <Link href="/register" className="btn bg-brand-teal text-white hover:bg-brand-navy transition-colors text-sm">
-            Get Started
-          </Link>
+          {userAvatar}
         </nav>
       </header>
 
@@ -33,14 +136,25 @@ export default function LandingPage() {
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-10">
               Connect students, academic advisors, and field supervisors in one unified platform. Track progress, submit reports, and ensure successful cooperative training outcomes.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
-                Get Started Free <ArrowRight className="ml-2 inline w-5 h-5" />
-              </Link>
-              <Link href="/login" className="btn btn-outline px-8 py-4 text-lg">
-                Sign In
-              </Link>
-            </div>
+            {status === "authenticated" ? (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg"
+                >
+                  Go to Dashboard <ArrowRight className="ml-2 inline w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
+                  Get Started Free <ArrowRight className="ml-2 inline w-5 h-5" />
+                </Link>
+                <Link href="/login" className="btn btn-outline px-8 py-4 text-lg">
+                  Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 
@@ -152,9 +266,18 @@ export default function LandingPage() {
             <p className="text-xl text-gray-600 mb-10">
               Join hundreds of students, academic advisors, and field supervisors using Pathways to streamline cooperative training.
             </p>
-            <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
-              Create Your Account <ArrowRight className="ml-2 inline w-5 h-5" />
-            </Link>
+            {status === "authenticated" ? (
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg"
+              >
+                Go to Dashboard <ArrowRight className="ml-2 inline w-5 h-5" />
+              </button>
+            ) : (
+              <Link href="/register" className="btn bg-brand-teal hover:bg-brand-navy text-white px-8 py-4 text-lg">
+                Create Your Account <ArrowRight className="ml-2 inline w-5 h-5" />
+              </Link>
+            )}
           </div>
         </section>
       </main>
