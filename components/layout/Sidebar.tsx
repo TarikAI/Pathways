@@ -38,6 +38,7 @@ export default function Sidebar({ role }: { role: string }) {
       { label: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
       { label: "Internships", href: "/internships", icon: Briefcase },
       { label: "My Internship", href: "/student/internship", icon: BookOpen },
+      { label: "My Reports", href: "/student/reports", icon: FileText },
       { label: "My Applications", href: "/student/applications", icon: FileText },
       { label: "Evaluations", href: "/student/evaluations", icon: FileText },
     ] : []),
