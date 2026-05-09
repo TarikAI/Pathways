@@ -17,6 +17,29 @@
 }
 
 @layer components {
+  /* Custom scrollbar for messages and lists */
+  .scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: #c4c6cd transparent;
+  }
+
+  .scroll-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #c4c6cd;
+    border-radius: 10px;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #74777d;
+  }
+
   .card {
     @apply bg-brand-white rounded-xl p-6 shadow-sm border border-black/5 mb-6;
   }

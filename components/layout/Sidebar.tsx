@@ -11,11 +11,27 @@ import {
   Users,
   Briefcase,
   BookOpen,
-  History
+  History,
+  X
 } from "lucide-react";
+import { useSidebar } from "./SidebarContext";
+import { useEffect } from "react";
 
 export default function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
+  const { isSidebarOpen, closeSidebar } = useSidebar();
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isSidebarOpen]);
 
   const navItems = [
     ...(role === "STUDENT" ? [
@@ -46,25 +62,56 @@ export default function Sidebar({ role }: { role: string }) {
   ];
 
   return (
-    <aside className="w-64 bg-brand-navy text-white flex flex-col h-screen">
-      <nav className="flex-1 py-6 flex flex-col">
-        {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className={`flex items-center gap-3 px-6 py-3 transition-colors ${
-                isActive ? "bg-brand-teal text-white border-l-4 border-brand-sky" : "text-brand-sky hover:bg-brand-teal/50 hover:text-white border-l-4 border-transparent"
-              }`}
-            >
-              <Icon size={20} />
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </aside>
+    <>
+      {/* Mobile overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          w-64 bg-brand-navy text-white flex flex-col
+          transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          h-screen
+        `}
+      >
+        {/* Close button for mobile */}
+        <button
+          onClick={closeSidebar}
+          className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-brand-teal/50 transition-colors"
+          aria-label="Close sidebar"
+        >
+          <X size={24} />
+        </button>
+
+        <nav className="flex-1 py-6 flex flex-col mt-12 lg:mt-0">
+          {navItems.map((item) => {
+            const isActive = pathname.startsWith(item.href);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={closeSidebar}
+                className={`flex items-center gap-3 px-6 py-3 transition-colors ${
+                  isActive
+                    ? "bg-brand-teal text-white border-l-4 border-brand-sky"
+                    : "text-brand-sky hover:bg-brand-teal/50 hover:text-white border-l-4 border-transparent"
+                }`}
+              >
+                <Icon size={20} />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+    </>
   );
 }
