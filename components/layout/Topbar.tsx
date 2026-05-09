@@ -91,20 +91,7 @@ export default function Topbar() {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <Link
-          href="/notifications"
-          className="relative text-brand-navy hover:text-brand-teal transition-colors"
-          title="Notifications"
-        >
-          <Bell size={20} />
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-red-500 rounded-full border-2 border-white text-white text-xs flex items-center justify-center font-medium">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
-        </Link>
-
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 items-end">
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setShowMenu(!showMenu)}
@@ -145,6 +132,19 @@ export default function Topbar() {
             </div>
           )}
         </div>
+
+        <Link
+          href="/notifications"
+          className="relative text-brand-navy hover:text-brand-teal transition-colors"
+          title="Notifications"
+        >
+          <Bell size={20} />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-red-500 rounded-full border-2 border-white text-white text-xs flex items-center justify-center font-medium">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </Link>
       </div>
     </header>
   );
