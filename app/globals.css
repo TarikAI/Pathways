@@ -43,40 +43,54 @@
   .card {
     @apply bg-brand-white rounded-xl p-6 shadow-sm border border-black/5 mb-6;
   }
-  
+
   .btn {
     @apply px-5 py-2.5 rounded-lg border-none font-semibold cursor-pointer transition-opacity inline-flex items-center justify-center gap-2 text-sm;
   }
-  
+
   .btn:hover {
     @apply opacity-90;
   }
-  
+
   .btn-primary {
     @apply bg-brand-navy text-brand-white;
   }
-  
+
   .btn-secondary {
     @apply bg-brand-teal text-brand-white;
   }
-  
+
   .btn-outline {
     @apply bg-transparent border border-brand-navy text-brand-navy;
   }
-  
+
   .form-group {
     @apply mb-4;
   }
-  
+
   .form-label {
     @apply block mb-2 font-medium text-brand-navy text-sm;
   }
-  
+
   .form-control {
     @apply w-full p-3 border border-gray-300 rounded-lg text-sm outline-none transition-colors;
   }
-  
+
   .form-control:focus {
     @apply border-brand-teal;
+  }
+
+  /* Mobile modal slide-up animation */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 }
