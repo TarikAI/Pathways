@@ -95,12 +95,12 @@ export default function Topbar() {
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="flex items-center gap-3 border-l pl-6 border-gray-200 hover:bg-gray-50 rounded-lg py-2 px-3 transition-colors"
+            className="flex items-center gap-3 hover:bg-gray-50 rounded-lg py-2 px-3 transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold text-sm">
-              {session.user.fullName?.charAt(0) || <User size={16} />}
+            <div className="w-10 h-10 rounded-full bg-brand-sky text-brand-navy flex items-center justify-center font-bold">
+              {session.user.fullName?.charAt(0) || <User size={18} />}
             </div>
-            <div className="flex flex-col items-start">
+            <div className="hidden md:flex flex-col items-start">
               <span className="text-sm font-semibold text-brand-navy leading-none mb-1">
                 {session.user.fullName}
               </span>
@@ -108,7 +108,7 @@ export default function Topbar() {
                 {session.user.role?.replace("_", " ")}
               </span>
             </div>
-            <ChevronDown size={16} className="text-gray-400" />
+            <ChevronDown size={16} className="hidden md:block text-gray-400" />
           </button>
 
           {showMenu && (
