@@ -114,6 +114,21 @@ export default function Topbar() {
           {showMenu && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
               <Link
+                href="/notifications"
+                className="flex items-center justify-between gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                onClick={() => setShowMenu(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <Bell size={16} />
+                  Notifications
+                </div>
+                {unreadCount > 0 && (
+                  <span className="min-w-[1.25rem] h-5 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-medium">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Link>
+              <Link
                 href="/settings"
                 className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 onClick={() => setShowMenu(false)}
@@ -135,7 +150,7 @@ export default function Topbar() {
 
         <Link
           href="/notifications"
-          className="relative text-brand-navy hover:text-brand-teal transition-colors"
+          className="hidden md:block relative text-brand-navy hover:text-brand-teal transition-colors"
           title="Notifications"
         >
           <Bell size={20} />
