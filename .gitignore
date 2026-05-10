@@ -58,3 +58,9 @@ stitch_prompt.md
 
 # Project notes
 BUILD_PROMPT.md
+Improvements-Plan.md
+build_plan.md
+
+# AI/LLM related
+*.ai.md
+prompt_*.md
