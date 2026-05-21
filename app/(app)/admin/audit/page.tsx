@@ -120,8 +120,6 @@ export default function AdminAuditPage() {
             >
               <option value="">All Entities</option>
               <option value="User">User</option>
-              <option value="TrainingProgram">Program</option>
-              <option value="TrainingApplication">Application</option>
               <option value="Internship">Internship</option>
               <option value="Report">Report</option>
               <option value="Evaluation">Evaluation</option>

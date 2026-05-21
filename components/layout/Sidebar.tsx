@@ -9,7 +9,6 @@ import {
   Bell,
   Settings,
   Users,
-  Briefcase,
   BookOpen,
   History,
   X
@@ -36,16 +35,12 @@ export default function Sidebar({ role }: { role: string }) {
   const navItems = [
     ...(role === "STUDENT" ? [
       { label: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
-      { label: "Internships", href: "/internships", icon: Briefcase },
       { label: "My Internship", href: "/student/internship", icon: BookOpen },
       { label: "My Reports", href: "/student/reports", icon: FileText },
-      { label: "My Applications", href: "/student/applications", icon: FileText },
       { label: "Evaluations", href: "/student/evaluations", icon: FileText },
     ] : []),
     ...(role === "ACADEMIC_SUPERVISOR" || role === "FIELD_SUPERVISOR" ? [
       { label: "Dashboard", href: "/supervisor/dashboard", icon: LayoutDashboard },
-      { label: "Programs", href: "/supervisor/programs", icon: BookOpen },
-      { label: "Applications", href: "/supervisor/applications", icon: FileText },
       { label: "Students", href: "/supervisor/students", icon: Users },
       { label: "Reports", href: "/supervisor/reports", icon: FileText },
       ...(role === "FIELD_SUPERVISOR" ? [
@@ -54,7 +49,6 @@ export default function Sidebar({ role }: { role: string }) {
     ] : []),
     ...(role === "ADMIN" ? [
       { label: "Users", href: "/admin/users", icon: Users },
-      { label: "Programs", href: "/admin/programs", icon: Briefcase },
       { label: "Audit Logs", href: "/admin/audit", icon: History },
     ] : []),
     { label: "Messages", href: "/messages", icon: MessageSquare },

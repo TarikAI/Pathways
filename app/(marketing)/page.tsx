@@ -174,12 +174,12 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy mb-2">For Students</h3>
                 <p className="text-gray-600 mb-4">
-                  Discover opportunities, track your internship progress, submit weekly reports, and receive evaluations from your supervisors.
+                  Track your internship progress, submit weekly reports, and receive evaluations from your supervisors. Communicate directly with your academic and field supervisors.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Browse training programs</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Submit weekly reports</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Track evaluations</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Message supervisors</li>
                 </ul>
               </div>
 
@@ -189,12 +189,12 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy mb-2">For Academic Supervisors</h3>
                 <p className="text-gray-600 mb-4">
-                  Create training programs, review applications, monitor student progress, and cosign field supervisor evaluations.
+                  Monitor student progress, review and cosign evaluations, and communicate directly with students and field supervisors.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Publish programs</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Review reports</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Cosign evaluations</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Message team</li>
                 </ul>
               </div>
 
@@ -204,11 +204,11 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy mb-2">For Field Supervisors</h3>
                 <p className="text-gray-600 mb-4">
-                  Review student applications, assign academic supervisors, submit weekly evaluations, and communicate with the team.
+                  Monitor student progress, submit weekly evaluations, and communicate directly with students and academic supervisors.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Approve applications</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Submit evaluations</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Review student progress</li>
                   <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-brand-teal" /> Message team</li>
                 </ul>
               </div>
@@ -225,10 +225,10 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="w-12 h-12 bg-brand-teal rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Briefcase className="w-6 h-6" />
+                  <Users className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold mb-2">Program Management</h3>
-                <p className="text-gray-300 text-sm">Create and manage training programs with application tracking</p>
+                <h3 className="font-semibold mb-2">Internship Management</h3>
+                <p className="text-gray-300 text-sm">Track student progress and manage internships</p>
               </div>
 
               <div className="text-center">
