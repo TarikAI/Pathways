@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Bell, Search, User, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -11,7 +12,6 @@ export default function Topbar() {
   const { data: session } = useSession();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showMenu, setShowMenu] = useState(false);
-  const [logoError, setLogoError] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,23 +64,14 @@ export default function Topbar() {
         >
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-        {!logoError ? (
-          <img
-            src="/logo-bg.jpg"
-            alt="Pathways"
-            width={350}
-            height={150}
-            className="h-[150px] w-auto object-contain"
-            onError={() => setLogoError(true)}
-          />
-        ) : (
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 bg-brand-navy text-brand-teal rounded-lg flex items-center justify-center font-bold text-2xl">
-              P
-            </div>
-            <span className="text-xl font-bold text-brand-navy">Pathways</span>
-          </div>
-        )}
+        <Image
+          src="/logo-bg.jpg"
+          alt="Pathways"
+          width={350}
+          height={150}
+          className="h-[150px] w-auto object-contain"
+          priority
+        />
         <div className="hidden md:flex items-center bg-brand-beige rounded-lg px-3 py-2 w-64 border border-transparent focus-within:border-brand-teal transition-colors">
           <Search size={18} className="text-brand-navy/50 mr-2" />
           <input

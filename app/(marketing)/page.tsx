@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Users, FileText, BarChart3, MessageSquare, CheckCircle2, Briefcase, GraduationCap, Building, User, LogOut, ChevronDown } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
@@ -10,7 +11,6 @@ export default function LandingPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [logoError, setLogoError] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -104,20 +104,14 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-white">
       <header className="h-40 flex items-center justify-between px-6 md:px-10 bg-white border-b border-gray-100">
         <div className="flex items-center gap-3">
-          {!logoError ? (
-            <img
-              src="/logo-bg.jpg"
-              alt="Pathways"
-              width={350}
-              height={150}
-              className="h-[150px] w-auto object-contain"
-              onError={() => setLogoError(true)}
-            />
-          ) : (
-            <div className="w-16 h-16 bg-brand-navy text-brand-teal rounded-lg flex items-center justify-center font-bold text-3xl">
-              P
-            </div>
-          )}
+          <Image
+            src="/logo-bg.jpg"
+            alt="Pathways"
+            width={350}
+            height={150}
+            className="h-[150px] w-auto object-contain"
+            priority
+          />
         </div>
         <nav className="flex gap-4 md:gap-6 items-center">
           {userAvatar}

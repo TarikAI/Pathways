@@ -31,6 +31,8 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
   const [error, setError] = useState("");
+  const [logoError, setLogoError] = useState(false);
+  const [vectorError, setVectorError] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
@@ -66,18 +68,33 @@ function LoginContent() {
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-center">
           <div className="mb-8">
-            <Image src="/logo-bg.jpg" alt="Pathways" width={200} height={80} className="mx-auto mb-4" priority />
+            {!logoError ? (
+              <Image
+                src="/logo-bg.jpg"
+                alt="Pathways"
+                width={200}
+                height={80}
+                className="mx-auto mb-4"
+                priority
+                onError={() => setLogoError(true)}
+              />
+            ) : (
+              <h1 className="text-4xl font-bold text-white tracking-widest mb-4">PATHWAYS</h1>
+            )}
             <p className="text-white/80 text-xl">Cooperative Training Platform</p>
           </div>
-          <div className="max-w-md">
-            <Image
-              src="/vector_illustration.png"
-              alt="Students and supervisors working together"
-              width={400}
-              height={300}
-              className="w-full h-auto object-contain"
-            />
-          </div>
+          {!vectorError && (
+            <div className="max-w-md">
+              <Image
+                src="/vector_illustration.png"
+                alt="Students and supervisors working together"
+                width={400}
+                height={300}
+                className="w-full h-auto object-contain"
+                onError={() => setVectorError(true)}
+              />
+            </div>
+          )}
           <p className="mt-8 text-white/70 text-lg max-w-md">
             Connecting students, academic advisors, and field supervisors for successful internship experiences
           </p>
