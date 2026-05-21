@@ -24,8 +24,9 @@ export default function Topbar() {
           const data = await res.json();
           setUnreadCount(data.unreadCount || 0);
         }
-      } catch (err) {
-        console.error("Failed to fetch unread count", err);
+      } catch {
+        // Silently fail - notification count is not critical
+        setUnreadCount(0);
       }
     };
 
